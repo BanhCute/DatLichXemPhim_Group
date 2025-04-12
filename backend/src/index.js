@@ -12,10 +12,12 @@ app.use(express.json()); // Parse JSON request body
 const authRoutes = require("./routes/authRoute");
 const bookingRoutes = require("./routes/bookingRoute");
 const paymentRoutes = require("./routes/paymentRoute");
+const genreRoutes = require("./routes/genreRoute");
 
 app.use("/api/auth", authRoutes); // Đường dẫn cho các route liên quan đến xác thực người dùng
 app.use("/api/booking", bookingRoutes); // Đường dẫn cho các route liên quan đến đặt vé
 app.use("/api/payment", paymentRoutes); // Đường dẫn cho các route liên quan đến thanh toán
+app.use("/api/genres", genreRoutes); // Các API liên quan đến thể loại phim
 
 // Route cơ bản để kiểm tra server
 app.get("/", (req, res) => {

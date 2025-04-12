@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Box } from "@mui/material";
 import Navbar from "./components/Layout/Navbar";
 import Footer from "./components/Layout/Footer";
@@ -21,6 +20,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/movies" element={<MoviesList />} />
             <Route path="/movies/:id" element={<MovieDetail />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </Box>
         <Footer />

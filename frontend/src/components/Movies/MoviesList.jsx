@@ -9,19 +9,13 @@ import {
   Container,
   Box,
   IconButton,
-  Skeleton,
   TextField,
   InputAdornment,
-  Alert,
-  Snackbar,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import SearchIcon from "@mui/icons-material/Search";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const MoviesList = () => {
   const [movies, setMovies] = useState([]);

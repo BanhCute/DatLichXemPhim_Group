@@ -9,23 +9,33 @@ const app = express();
 app.use(cors()); // Cho phép frontend gọi API
 app.use(express.json()); // Parse JSON request body
 
+// Import routes
 const authRoutes = require("./routes/authRoute");
+const movieRoutes = require("./routes/movieRoute");
 const bookingRoutes = require("./routes/bookingRoute");
-const paymentRoutes = require("./routes/paymentRoute");
 const genreRoutes = require("./routes/genreRoute");
 const movieGenreRoutes = require("./routes/movieGenreRoute");
-const movieRoutes = require("./routes/movieRoute");
+const paymentRoutes = require("./routes/paymentRoute");
 
-app.use("/api/auth", authRoutes); // Đường dẫn cho các route liên quan đến xác thực người dùng
-app.use("/api/booking", bookingRoutes); // Đường dẫn cho các route liên quan đến đặt vé
-app.use("/api/payment", paymentRoutes); // Đường dẫn cho các route liên quan đến thanh toán
+// Đăng ký routes
+app.use("/api/auth", authRoutes); // Các API liên quan đến auth
+app.use("/api/movies", movieRoutes); // Các API liên quan đến phim
+app.use("/api/bookings", bookingRoutes); // Các API liên quan đến đặt vé
 app.use("/api/genres", genreRoutes); // Các API liên quan đến thể loại phim
 app.use("/api/movie-genres", movieGenreRoutes); // Các API liên quan đến thể loại phim
-app.use("/api/movies", movieRoutes); // Các API liên quan đến phim
+app.use("/api/payments", paymentRoutes); // Các API liên quan đến thanh toán
 
-// Route cơ bản để kiểm tra server
-app.get("/", (req, res) => {
-  res.send("Welcome to DatLichXemPhim API");
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  // Kiểm tra nếu response chưa được gửi
+  if (!res.headersSent) {
+    res.status(err.status || 500).json({
+      success: false,
+      message: err.message || "Có lỗi xảy ra",
+    });
+  }
 });
 
 // Khởi động server

@@ -1,8 +1,8 @@
-import { Router } from "express";
-const router = Router();
-import bookingController from "../controllers/bookingController";
-import { CheckAuth, CheckRole } from "../utils/check_auth";
-import { CreateSuccessRes } from "../utils/responseHandler";
+const express = require("express");
+const router = express.Router();
+const bookingController = require("../controllers/bookingController");
+const { CheckAuth, CheckRole } = require("../utils/check_auth");
+const { CreateSuccessRes } = require("../utils/responseHandler");
 
 router.get("/my-bookings", CheckAuth, async function (req, res, next) {
   try {
@@ -40,4 +40,4 @@ router.post("/create", [CheckAuth, CheckRole], async function (req, res, next) {
   }
 });
 
-export default router;
+module.exports = router;

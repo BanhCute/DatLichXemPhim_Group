@@ -46,7 +46,7 @@ const ShowTimeList = ({ movieId }) => {
 
   if (showTimes.length === 0)
     return (
-      <Typography variant="body1" sx={{ mt: 2 , color: "black" }}>
+      <Typography variant="body1" sx={{ mt: 2, color: "black" }}>
         😢 Không có lịch chiếu nào cho phim này.
       </Typography>
     );
@@ -56,16 +56,23 @@ const ShowTimeList = ({ movieId }) => {
       {showTimes.map((showtime) => (
         <ListItem key={showtime.id} divider>
           <ListItemText
-            primary={`⏰ ${formatTime(showtime.startTime)} - ${formatTime(
-              showtime.endTime
-            )}`}
+            primary={
+              <Typography
+                component="span"
+                variant="body1"
+                sx={{ color: "#C0C0C0" }}
+              >
+                ⏰ {formatTime(showtime.startTime)} -{" "}
+                {formatTime(showtime.endTime)}
+              </Typography>
+            }
             secondary={
               <>
-                <Typography component="span" variant="body2">
+                <Typography component="span" variant="body2" sx={{ color: "#C0C0C0" }}>
                   📍 Phòng: {showtime.room}
                 </Typography>
                 <br />
-                <Typography component="span" variant="body2">
+                <Typography component="span" variant="body2" sx={{ color: "#C0C0C0" }}>
                   💸 Giá: {showtime.price.toLocaleString()}đ
                 </Typography>
               </>

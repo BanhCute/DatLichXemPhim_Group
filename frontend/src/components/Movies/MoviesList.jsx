@@ -53,60 +53,64 @@ const MoviesList = () => {
   );
 
   return (
-    <Container maxWidth="100vw" sx={{ bgcolor: "#f5f5f5", minHeight: "100vh" }}>
-    <Box sx={{ py: 4 }}>
-      {/* Header Section */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 4,
-        }}
-      >
-        <Typography
-          variant="h3"
-          component="h1"
+    <Container
+      maxWidth="100vw"
+      sx={{
+        background: "linear-gradient(135deg, #2c3e50 0%, #4a6a8a 100%) ",
+      }}
+    >
+      <Box sx={{ py: 4 }}>
+        {/* Header Section */}
+        <Box
           sx={{
-            fontWeight: "bold",
-            color: "#d32f2f", // 🔴 Màu đỏ chủ đạo
             display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-between",
             alignItems: "center",
-            mb: { xs: 2, md: 0 },
+            mb: 4,
           }}
         >
-          <LocalMoviesIcon sx={{ fontSize: 40, mr: 2, color: "#d32f2f" }} />
-          Phim Đang Chiếu
-        </Typography>
-  
-        {/* Search input giữ màu xám */}
-        <TextField
-          placeholder="Tìm kiếm phim..."
-          variant="outlined"
-          size="small"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ width: { xs: "100%", md: "300px" }, bgcolor: "white" }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
-  
-      {/* Snackbar giữ nguyên */}
-      
-      {/* Movies Grid */}
-      <Grid container spacing={4}>
-        {loading
-          ? (
+          <Typography
+            variant="h3"
+            component="h1"
+            sx={{
+              fontWeight: "bold",
+              color: "#d32f2f", 
+              display: "flex",
+              alignItems: "center",
+              mb: { xs: 2, md: 0 },
+            }}
+          >
+            <LocalMoviesIcon sx={{ fontSize: 40, mr: 2, color: "#d32f2f" }} />
+            Phim Đang Chiếu
+          </Typography>
+
+          {/* Search input giữ màu xám */}
+          <TextField
+            placeholder="Tìm kiếm phim..."
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ width: { xs: "100%", md: "300px" }, bgcolor: "white" }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+
+        {/* Snackbar giữ nguyên */}
+
+        {/* Movies Grid */}
+        <Grid container spacing={4}>
+          {loading ? (
             <Typography variant="h6">Đang tải dữ liệu...</Typography>
-          ) 
-          : filteredMovies.map((movie) => (
+          ) : (
+            filteredMovies.map((movie) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
                 <Card
                   sx={{
@@ -115,7 +119,7 @@ const MoviesList = () => {
                     flexDirection: "column",
                     borderRadius: "16px",
                     overflow: "hidden",
-                    bgcolor: "#e0e0e0", 
+                    bgcolor: "#e0e0e0",
                     transition: "all 0.3s",
                     "&:hover": {
                       transform: "translateY(-8px)",
@@ -127,7 +131,9 @@ const MoviesList = () => {
                     <CardMedia
                       component="img"
                       height="400"
-                      image={movie.imageUrl || "/images/movies/default-movie.jpg"}
+                      image={
+                        movie.imageUrl || "/images/movies/default-movie.jpg"
+                      }
                       alt={movie.title}
                       sx={{
                         objectFit: "cover",
@@ -137,7 +143,7 @@ const MoviesList = () => {
                         },
                       }}
                     />
-  
+
                     {/* Favorite Icon luôn màu đỏ khi chọn */}
                     <IconButton
                       onClick={() => toggleFavorite(movie.id)}
@@ -150,10 +156,14 @@ const MoviesList = () => {
                       }}
                     >
                       <FavoriteIcon
-                        sx={{ color: favorites.includes(movie.id) ? "#d32f2f" : "grey" }}
+                        sx={{
+                          color: favorites.includes(movie.id)
+                            ? "#d32f2f"
+                            : "grey",
+                        }}
                       />
                     </IconButton>
-  
+
                     {/* Movie Info Overlay */}
                     <Box
                       sx={{
@@ -171,7 +181,7 @@ const MoviesList = () => {
                       {/* Icons giữ trắng để nổi bật */}
                     </Box>
                   </Box>
-  
+
                   <CardContent sx={{ flexGrow: 1, p: 3 }}>
                     <Typography
                       variant="body2"
@@ -187,7 +197,7 @@ const MoviesList = () => {
                     >
                       {movie.description}
                     </Typography>
-  
+
                     <Box sx={{ mt: "auto" }}>
                       <Button
                         variant="contained"
@@ -211,12 +221,13 @@ const MoviesList = () => {
                   </CardContent>
                 </Card>
               </Grid>
-            ))}
-      </Grid>
-  
-      {/* No results giữ nguyên */}
-    </Box>
-  </Container>  
+            ))
+          )}
+        </Grid>
+
+        {/* No results giữ nguyên */}
+      </Box>
+    </Container>
   );
 };
 

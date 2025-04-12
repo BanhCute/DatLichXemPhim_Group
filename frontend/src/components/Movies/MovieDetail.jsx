@@ -11,7 +11,7 @@ import {
   Stack,
   Button,
 } from "@mui/material";
-import ShowTimesList from "../ShowTimes/ShowTimesList";
+import ShowTimesList from "../Showtimes/ShowTimesList";
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -47,7 +47,7 @@ const MovieDetail = () => {
   }
 
   return (
-    <Box sx={{ bgcolor: "#f5f5f5", color: "#ddd", py: 5, height: "100vh" }}>
+    <Box sx={{ background: "linear-gradient(135deg, #2c3e50 0%, #4a6a8a 100%)" }}>
       <Container maxWidth="lg">
         <Grid container spacing={4} alignItems="flex-start">
           {/* Poster phim */}
@@ -81,15 +81,15 @@ const MovieDetail = () => {
               </Typography>
 
               <Box sx={{ lineHeight: 1.8 }}>
-                <Typography variant="body2" sx={{ mb: 2, color: "black" }}>
+                <Typography variant="body2" sx={{ mb: 2, color: "#C0C0C0" }}>
                   {movie.description}
                 </Typography>
 
-                <Typography variant="body2" sx={{ mb: 1, color: "black" }}>
-                  ⏱ <strong>Thời lượng:</strong> {movie.duration} phút
+                <Typography variant="body" sx={{ mb: 1, color: "#C0C0C0" }}>
+                  ⏱ Thời lượng: {movie.duration} phút
                 </Typography>
 
-                <Typography variant="body2" sx={{ mb: 1, color: "black" }}>
+                <Typography variant="body2" sx={{ mb: 1, color: "#C0C0C0" }}>
                   🎟️ Số suất chiếu:{movie.showTimes?.length || 0}
                 </Typography>
 

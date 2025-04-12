@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  name      String
+  role      Role      @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[]
+  reviews   Review[]
+}
+
+model Movie {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String
+  duration    Int
+  imageUrl    String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  genres      MovieGenre[]
+  reviews     Review[]
+  showTimes   ShowTime[]
+}
+
+model ShowTime {
+  id        Int       @id @default(autoincrement())
+  movieId   Int
+  startTime DateTime
+  endTime   DateTime
+  room      String
+  price     Float
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[]
+  seats     Seat[]
+  movie     Movie     @relation(fields: [movieId], references: [id], onDelete: Cascade)
+}
+
+model Seat {
+  id         Int      @id @default(autoincrement())
+  number     String
+  showTimeId Int
+  status     Status   @default(AVAILABLE)
+  bookingId  Int?
+  booking    Booking? @relation(fields: [bookingId], references: [id])
+  showTime   ShowTime @relation(fields: [showTimeId], references: [id], onDelete: Cascade)
+}
+
+model Booking {
+  id          Int           @id @default(autoincrement())
+  userId      Int
+  showTimeId  Int
+  totalPrice  Float
+  status      BookingStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  promotionId Int?
+  promotion   Promotion?    @relation(fields: [promotionId], references: [id])
+  showTime    ShowTime      @relation(fields: [showTimeId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
+  payments    Payment[]
+  seats       Seat[]
+}
+
+model Genre {
+  id        Int          @id @default(autoincrement())
+  name      String       @unique
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  movies    MovieGenre[]
+}
+
+model MovieGenre {
+  id        Int      @id @default(autoincrement())
+  movieId   Int
+  genreId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  genre     Genre    @relation(fields: [genreId], references: [id], onDelete: Cascade)
+  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([movieId, genreId])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  movieId   Int
+  rating    Int      @default(0)
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, movieId])
+}
+
+model Promotion {
+  id        Int       @id @default(autoincrement())
+  code      String    @unique
+  discount  Float
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[]
+}
+
+model Payment {
+  id        Int           @id @default(autoincrement())
+  bookingId Int
+  amount    Float
+  method    PaymentMethod
+  status    PaymentStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+model playing_with_neon {
+  id    Int    @id @default(autoincrement())
+  name  String
+  value Float? @db.Real
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  PAYPAL
+  CASH
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Status {
+  AVAILABLE
+  BOOKED
+  RESERVED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}

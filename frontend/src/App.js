@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Box } from "@mui/material";
 import Navbar from "./components/Layout/Navbar";
 import Footer from "./components/Layout/Footer";
@@ -7,6 +7,8 @@ import Footer from "./components/Layout/Footer";
 
 
 import Home from "./components/Home/Home";
+import MoviesList from "./components/Movies/MoviesList";
+import MovieDetail from "./components/Movies/MovieDetail";
 
 
 
@@ -21,6 +23,8 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
+            <Route path="/movies" element={<MoviesList />} />
+            <Route path="/movies/:id" element={<MovieDetail />} />
           </Routes>
         </Box>
         <Footer />

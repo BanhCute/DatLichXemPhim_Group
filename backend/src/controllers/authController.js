@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { hash, compare } from "bcrypt";
+const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 
 const authController = {
@@ -10,7 +10,7 @@ const authController = {
         throw new Error("Email đã tồn tại");
       }
 
-      let hashedPassword = await hash(password, 10);
+      let hashedPassword = await bcrypt.hash(password, 10);
       let user = await prisma.user.create({
         data: {
           email,
@@ -71,7 +71,7 @@ const authController = {
     if (!user) {
       throw new Error("Email hoặc mật khẩu không đúng");
     }
-    let isPasswordValid = await compare(password, user.password);
+    let isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new Error("Email hoặc mật khẩu không đúng");
     }
@@ -108,7 +108,7 @@ const authController = {
           message: "Không tìm thấy người dùng",
         });
       }
-      const isValidPassword = await compare(
+      const isValidPassword = await bcrypt.compare(
         currentPassword,
         user.password
       );
@@ -117,7 +117,7 @@ const authController = {
           message: "Mật khẩu hiện tại không đúng",
         });
       }
-      const hashedPassword = await hash(newPassword, 10);
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
       const updatedUser = await prisma.user.update({
         where: {
           id: userId,
@@ -151,4 +151,4 @@ const authController = {
   },
 };
 
-export default authController;
+module.exports = authController;

@@ -1,9 +1,9 @@
-import { Router } from "express";
-var router = Router();
-import { sign } from "jsonwebtoken";
-import { CreateSuccessRes } from "../utils/responseHandler";
-import authController from "../controllers/authController";
-import { CheckAuth, CheckRole } from "../utils/check_auth";
+var express = require("express");
+var router = express.Router();
+var jwt = require("jsonwebtoken");
+let { CreateSuccessRes } = require("../utils/responseHandler");
+let authController = require("../controllers/authController");
+const { CheckAuth, CheckRole } = require("../utils/check_auth");
 require("dotenv").config();
 
 router.post("/register", async function (req, res, next) {
@@ -17,7 +17,7 @@ router.post("/register", async function (req, res, next) {
     );
     CreateSuccessRes(
       res,
-      sign(
+      jwt.sign(
         {
           id: newUser.id,
           email: newUser.email,
@@ -38,7 +38,7 @@ router.post("/login", async function (req, res, next) {
     let user = await authController.CheckLogin(email, password);
     CreateSuccessRes(
       res,
-      sign(
+      jwt.sign(
         {
           id: user.id,
           email: user.email,
@@ -99,4 +99,4 @@ router.get("/users", [CheckAuth, CheckRole], async function (req, res, next) {
   }
 });
 
-export default router;
+module.exports = router;

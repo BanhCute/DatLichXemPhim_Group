@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-import { verify } from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 
 const bookingController = {
   GetAll: async function (req, res) {
@@ -86,7 +86,7 @@ const bookingController = {
 
       // Lấy thông tin user từ token
       const token = req.headers.authorization?.split(" ")[1];
-      const decoded = verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const userId = decoded.id;
 
       // Kiểm tra user
@@ -247,4 +247,4 @@ const bookingController = {
   },
 };
 
-export default bookingController;
+module.exports = bookingController;

@@ -10,8 +10,10 @@ app.use(cors()); // Cho phép frontend gọi API
 app.use(express.json()); // Parse JSON request body
 
 const authRoutes = require("./routes/authRoute");
+const bookingRoutes = require("./routes/bookingRoute");
 
 app.use("/api/auth", authRoutes); // Đường dẫn cho các route liên quan đến xác thực người dùng
+app.use("/api/booking", bookingRoutes); // Đường dẫn cho các route liên quan đến đặt vé
 
 // Route cơ bản để kiểm tra server
 app.get("/", (req, res) => {

@@ -9,6 +9,10 @@ const app = express();
 app.use(cors()); // Cho phép frontend gọi API
 app.use(express.json()); // Parse JSON request body
 
+const authRoutes = require("./routes/authRoute");
+
+app.use("/api/auth", authRoutes); // Đường dẫn cho các route liên quan đến xác thực người dùng
+
 // Route cơ bản để kiểm tra server
 app.get("/", (req, res) => {
   res.send("Welcome to DatLichXemPhim API");

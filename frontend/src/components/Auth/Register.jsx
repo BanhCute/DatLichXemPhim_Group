@@ -1,75 +1,68 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   TextField,
   Button,
   Typography,
-  Container,
   Paper,
   Fade,
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { Link } from "react-router-dom";
-import { Email, Lock } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { Person, Email, Lock } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
-const Login = () => {
+const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: localStorage.getItem("registeredEmail") || "",
+    name: "",
+    email: "",
     password: "",
+    confirmPassword: "",
   });
   const [error, setError] = useState("");
 
-  // Xóa email đã lưu sau khi load
-  useEffect(() => {
-    const registeredEmail = localStorage.getItem("registeredEmail");
-    if (registeredEmail) {
-      setFormData((prev) => ({ ...prev, email: registeredEmail }));
-      localStorage.removeItem("registeredEmail");
-    }
-  }, []);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Đăng nhập không thành công");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        localStorage.setItem("token", data.data);
-        return fetch("http://localhost:5000/api/auth/me", {
-          headers: {
-            Authorization: `Bearer ${data.data}`,
-          },
-        });
-      })
-      .then((res) => res.json())
-      .then((userData) => {
-        localStorage.setItem("userRole", userData.data.role);
-        const redirectUrl = localStorage.getItem("redirectUrl");
-        if (userData.data.role === "ADMIN") {
-          window.location.href = "/admin/movies";
-        } else if (redirectUrl) {
-          localStorage.removeItem("redirectUrl");
-          window.location.href = redirectUrl;
-        } else {
-          window.location.href = "/movies";
-        }
-        window.dispatchEvent(new Event("storage"));
-      })
-      .catch((err) => {
-        setError(err.message);
+    setError("");
+
+    // Kiểm tra mật khẩu xác nhận
+    if (formData.password !== formData.confirmPassword) {
+      setError("Mật khẩu xác nhận không khớp");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
       });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Đăng ký thất bại");
+      }
+
+      // Hiển thị thông báo thành công
+      alert("Đăng ký tài khoản thành công!");
+
+      // Lưu email vào localStorage để điền sẵn form login
+      localStorage.setItem("registeredEmail", formData.email);
+
+      // Chuyển hướng về trang login
+      navigate("/login");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   // Hiệu ứng chuyển động cho container và các thành phần con
@@ -160,7 +153,7 @@ const Login = () => {
         }}
       />
 
-      <Container maxWidth="sm" sx={{ position: "relative", zIndex: 1 }}>
+      <Box sx={{ position: "relative", zIndex: 1, maxWidth: 440, width: "100%" }}>
         <Fade in timeout={1500}>
           <Paper
             elevation={0}
@@ -223,7 +216,7 @@ const Login = () => {
                     textShadow: "0 0 10px rgba(255, 255, 255, 0.2)",
                   }}
                 >
-                  Khám phá thế giới điện ảnh đỉnh cao
+                  Đăng ký để trải nghiệm điện ảnh đỉnh cao
                 </Typography>
               </motion.div>
             </Box>
@@ -237,6 +230,9 @@ const Login = () => {
                     mb: 2,
                     fontWeight: 500,
                     textShadow: "0 0 5px rgba(229, 9, 20, 0.3)",
+                    backgroundColor: "rgba(255, 0, 0, 0.1)",
+                    p: 1,
+                    borderRadius: 1,
                   }}
                 >
                   {error}
@@ -250,10 +246,60 @@ const Login = () => {
                   fullWidth
                   margin="normal"
                   required
+                  label="Họ tên"
+                  name="name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Person sx={{ color: "rgba(255, 255, 255, 0.4)" }} />
+                      </InputAdornment>
+                    ),
+                    sx: {
+                      background: "rgba(255, 255, 255, 0.03)",
+                      color: "#fff",
+                      borderRadius: 2,
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        background: "rgba(255, 255, 255, 0.05)",
+                      },
+                    },
+                  }}
+                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.4)" } }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "rgba(255, 255, 255, 0.1)",
+                        transition: "all 0.3s ease",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "rgba(255, 255, 255, 0.3)",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#e50914",
+                        boxShadow: "0 0 15px rgba(229, 9, 20, 0.4)",
+                        animation: "ripple 1s ease-out",
+                      },
+                    },
+                    "@keyframes ripple": {
+                      "0%": { boxShadow: "0 0 0 0 rgba(229, 9, 20, 0.4)" },
+                      "100%": { boxShadow: "0 0 0 20px rgba(229, 9, 20, 0)" },
+                    },
+                  }}
+                />
+              </motion.div>
+
+              <motion.div variants={childVariants}>
+                <TextField
+                  fullWidth
+                  margin="normal"
+                  required
                   label="Email"
                   name="email"
-                  autoComplete="email"
-                  autoFocus
+                  type="email"
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
@@ -351,6 +397,58 @@ const Login = () => {
               </motion.div>
 
               <motion.div variants={childVariants}>
+                <TextField
+                  fullWidth
+                  margin="normal"
+                  required
+                  label="Xác nhận mật khẩu"
+                  name="confirmPassword"
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={(e) =>
+                    setFormData({ ...formData, confirmPassword: e.target.value })
+                  }
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Lock sx={{ color: "rgba(255, 255, 255, 0.4)" }} />
+                      </InputAdornment>
+                    ),
+                    sx: {
+                      background: "rgba(255, 255, 255, 0.03)",
+                      color: "#fff",
+                      borderRadius: 2,
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        background: "rgba(255, 255, 255, 0.05)",
+                      },
+                    },
+                  }}
+                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.4)" } }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "rgba(255, 255, 255, 0.1)",
+                        transition: "all 0.3s ease",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "rgba(255, 255, -lines: 0.3)",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#e50914",
+                        boxShadow: "0 0 15px rgba(229, 9, 20, 0.4)",
+                        animation: "ripple 1s ease-out",
+                      },
+                    },
+                    "@keyframes ripple": {
+                      "0%": { boxShadow: "0 0 0 0 rgba(229, 9, 20, 0.4)" },
+                      "100%": { boxShadow: "0 0 0 20px rgba(229, 9, 20, 0)" },
+                    },
+                  }}
+                />
+              </motion.div>
+
+              <motion.div variants={childVariants}>
                 <Button
                   type="submit"
                   fullWidth
@@ -378,7 +476,7 @@ const Login = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  Đăng nhập
+                  Đăng ký
                   <style>
                     {`
                       @keyframes neonGlow {
@@ -390,40 +488,12 @@ const Login = () => {
                   </style>
                 </Button>
               </motion.div>
-
-              <motion.div variants={childVariants}>
-                <Typography
-                  variant="body2"
-                  align="center"
-                  sx={{
-                    mt: 3,
-                    color: "rgba(255, 255, 255, 0.5)",
-                    letterSpacing: 1,
-                  }}
-                >
-                  Bạn chưa có tài khoản?{" "}
-                  <Link
-                    to="/register"
-                    style={{
-                      color: "#e50914",
-                      textDecoration: "none",
-                      fontWeight: 600,
-                      transition: "all 0.3s ease",
-                      textShadow: "0 0 5px rgba(229, 9, 20, 0.3)",
-                    }}
-                    onMouseEnter={(e) => (e.target.style.color = "#ff6f61")}
-                    onMouseLeave={(e) => (e.target.style.color = "#e50914")}
-                  >
-                    Đăng ký ngay
-                  </Link>
-                </Typography>
-              </motion.div>
             </Box>
           </Paper>
         </Fade>
-      </Container>
+      </Box>
     </Box>
   );
 };
 
-export default Login;
+export default Register;

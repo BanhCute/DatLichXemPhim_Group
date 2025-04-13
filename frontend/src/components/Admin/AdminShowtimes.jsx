@@ -21,10 +21,26 @@ import {
   Box,
   MenuItem,
   IconButton,
+  Alert,
+  TablePagination,
+  Tooltip,
+  CircularProgress,
+  Fade,
+  useTheme,
+  Grid,
+  Chip,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import MovieIcon from "@mui/icons-material/Movie";
+import CategoryIcon from "@mui/icons-material/Category";
+import PeopleIcon from "@mui/icons-material/People";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import TheatersIcon from "@mui/icons-material/Theaters";
 import moment from "moment";
 
 const AdminShowtimes = () => {
@@ -182,137 +198,349 @@ const AdminShowtimes = () => {
   };
 
   return (
-    <Stack
+    <Box
       sx={{
-        background: "linear-gradient(135deg, #2c3e50 0%, #4a6a8a 100%)",
-        height: "100vh",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #1a237e 0%, #0d47a1 100%)",
+        py: 4,
       }}
     >
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Paper sx={{ mb: 3 }}>
+      <Container maxWidth="xl">
+        {/* Admin Navigation */}
+        <Paper
+          elevation={24}
+          sx={{
+            mb: 6,
+            borderRadius: 3,
+            backgroundColor: "rgba(255, 255, 255, 0.98)",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+            overflow: "hidden",
+            position: "relative",
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "4px",
+              background: "linear-gradient(90deg, #e50914, #ff5722, #ff9800)",
+            },
+          }}
+        >
           <Tabs
             value={tabValue}
             onChange={handleTabChange}
             textColor="primary"
             indicatorColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
             sx={{
               "& .MuiTab-root": {
-                color: "#666",
+                fontFamily: "'Poppins', sans-serif",
+                fontWeight: 600,
+                color: "#37474f",
+                textTransform: "none",
+                fontSize: "1rem",
+                padding: "16px 32px",
+                transition: "all 0.3s ease",
+                minHeight: "72px",
+                "&:hover": {
+                  color: "#e50914",
+                  backgroundColor: "rgba(229, 9, 20, 0.08)",
+                },
                 "&.Mui-selected": {
                   color: "#e50914",
                 },
               },
               "& .MuiTabs-indicator": {
                 backgroundColor: "#e50914",
+                height: 3,
+                borderRadius: "3px 3px 0 0",
               },
             }}
           >
-            <Tab label="DASHBOARD" />
-            <Tab label="QUẢN LÝ PHIM" />
-            <Tab label="QUẢN LÝ THỂ LOẠI" />
-            <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
-            <Tab label="QUẢN LÝ ĐẶT VÉ" />
-            <Tab label="QUẢN LÝ SUẤT CHIẾU" />
+            <Tab
+              label="Dashboard"
+              icon={<DashboardIcon />}
+              iconPosition="start"
+            />
+            <Tab
+              label="Quản lý Phim"
+              icon={<MovieIcon />}
+              iconPosition="start"
+            />
+            <Tab
+              label="Quản lý Thể Loại"
+              icon={<CategoryIcon />}
+              iconPosition="start"
+            />
+            <Tab
+              label="Quản lý Người Dùng"
+              icon={<PeopleIcon />}
+              iconPosition="start"
+            />
+            <Tab
+              label="Quản lý Đặt Vé"
+              icon={<ReceiptIcon />}
+              iconPosition="start"
+            />
+            <Tab
+              label="Quản lý Suất Chiếu"
+              icon={<ShowChartIcon />}
+              iconPosition="start"
+            />
           </Tabs>
         </Paper>
 
-        <Stack sx={{ backgroundColor: "#f5f5f5" }}>
-          <Box
+        {/* Header and Add Button */}
+        <Box
+          sx={{
+            mb: 4,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="h4"
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              mb: 3,
-              alignItems: "center",
+              color: "#fff",
+              fontWeight: 700,
+              fontFamily: "'Poppins', sans-serif",
+              textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
             }}
           >
-            <Typography
-              variant="h5"
-              sx={{ color: "#e50914", fontWeight: "bold" }}
-            >
-              Quản Lý Suất Chiếu
-            </Typography>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#e50914",
-                "&:hover": {
-                  backgroundColor: "#b81d24",
-                },
-              }}
-              onClick={() => {
-                setEditShowtime(null);
-                setFormData({
-                  movieId: "",
-                  startTime: moment().format("YYYY-MM-DDTHH:mm"),
-                  endTime: moment().add(2, "hours").format("YYYY-MM-DDTHH:mm"),
-                  room: "",
-                  price: "",
-                });
-                setOpen(true);
-              }}
-            >
-              Thêm Suất Chiếu
-            </Button>
-          </Box>
-        </Stack>
-
-        {error && (
-          <Typography color="error" sx={{ mb: 2 }}>
-            {error}
+            Quản lý Suất Chiếu
           </Typography>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => {
+              setEditShowtime(null);
+              setFormData({
+                movieId: "",
+                startTime: moment().format("YYYY-MM-DDTHH:mm"),
+                endTime: moment().add(2, "hours").format("YYYY-MM-DDTHH:mm"),
+                room: "",
+                price: "",
+              });
+              setOpen(true);
+            }}
+            sx={{
+              backgroundColor: "#e50914",
+              fontWeight: 600,
+              borderRadius: 2,
+              textTransform: "none",
+              px: 3,
+              py: 1.5,
+              "&:hover": {
+                backgroundColor: "#b71c1c",
+              },
+            }}
+          >
+            Thêm Suất Chiếu
+          </Button>
+        </Box>
+
+        {/* Error Alert */}
+        {error && (
+          <Alert
+            severity="error"
+            sx={{
+              mb: 4,
+              borderRadius: 2,
+              backgroundColor: "rgba(211, 47, 47, 0.1)",
+              color: "#d32f2f",
+              "& .MuiAlert-icon": {
+                color: "#d32f2f",
+              },
+            }}
+          >
+            {error}
+          </Alert>
         )}
 
-        <TableContainer component={Paper}>
+        {/* Showtimes Table */}
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: 3,
+            overflow: "hidden",
+            backgroundColor: "rgba(255, 255, 255, 0.98)",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+          }}
+        >
           <Table>
             <TableHead>
-              <TableRow>
-                <TableCell>Phim</TableCell>
-                <TableCell>Thời gian bắt đầu</TableCell>
-                <TableCell>Thời gian kết thúc</TableCell>
-                <TableCell>Phòng</TableCell>
-                <TableCell>Giá vé</TableCell>
-                <TableCell>Thao tác</TableCell>
+              <TableRow
+                sx={{
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                }}
+              >
+                <TableCell
+                  sx={{
+                    fontWeight: 700,
+                    color: "#37474f",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Phim
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 700,
+                    color: "#37474f",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Thời gian bắt đầu
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 700,
+                    color: "#37474f",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Thời gian kết thúc
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 700,
+                    color: "#37474f",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Phòng
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 700,
+                    color: "#37474f",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Giá vé
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{
+                    fontWeight: 700,
+                    color: "#37474f",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Thao tác
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {showtimes.map((showtime) => (
-                <TableRow key={showtime.id}>
-                  <TableCell>{showtime.movie?.title}</TableCell>
+                <TableRow
+                  key={showtime.id}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 0, 0.04)",
+                    },
+                  }}
+                >
                   <TableCell>
-                    {moment(showtime.startTime).format("DD/MM/YYYY HH:mm")}
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      <TheatersIcon sx={{ color: "#1976d2" }} />
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          fontWeight: 600,
+                          color: "#1a237e",
+                        }}
+                      >
+                        {showtime.movie?.title}
+                      </Typography>
+                    </Box>
                   </TableCell>
                   <TableCell>
-                    {moment(showtime.endTime).format("DD/MM/YYYY HH:mm")}
-                  </TableCell>
-                  <TableCell>{showtime.room}</TableCell>
-                  <TableCell>{formatCurrency(showtime.price)}</TableCell>
-                  <TableCell>
-                    <IconButton
-                      onClick={() => {
-                        setEditShowtime(showtime);
-                        setFormData({
-                          movieId: showtime.movieId,
-                          startTime: moment(showtime.startTime).format(
-                            "YYYY-MM-DDTHH:mm"
-                          ),
-                          endTime: moment(showtime.endTime).format(
-                            "YYYY-MM-DDTHH:mm"
-                          ),
-                          room: showtime.room,
-                          price: showtime.price,
-                        });
-                        setOpen(true);
+                    <Chip
+                      label={moment(showtime.startTime).format(
+                        "DD/MM/YYYY HH:mm"
+                      )}
+                      sx={{
+                        backgroundColor: "rgba(25, 118, 210, 0.1)",
+                        color: "#1976d2",
                       }}
-                      sx={{ color: "#e50914" }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      label={moment(showtime.endTime).format(
+                        "DD/MM/YYYY HH:mm"
+                      )}
+                      sx={{
+                        backgroundColor: "rgba(25, 118, 210, 0.1)",
+                        color: "#1976d2",
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      label={`Phòng ${showtime.room}`}
+                      sx={{
+                        backgroundColor: "rgba(76, 175, 80, 0.1)",
+                        color: "#4caf50",
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      sx={{
+                        color: "#e50914",
+                        fontWeight: 600,
+                      }}
                     >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => handleDelete(showtime.id)}
-                      sx={{ color: "#e50914" }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                      {formatCurrency(showtime.price)}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Tooltip title="Chỉnh sửa" arrow>
+                      <IconButton
+                        onClick={() => {
+                          setEditShowtime(showtime);
+                          setFormData({
+                            movieId: showtime.movieId,
+                            startTime: moment(showtime.startTime).format(
+                              "YYYY-MM-DDTHH:mm"
+                            ),
+                            endTime: moment(showtime.endTime).format(
+                              "YYYY-MM-DDTHH:mm"
+                            ),
+                            room: showtime.room,
+                            price: showtime.price,
+                          });
+                          setOpen(true);
+                        }}
+                        sx={{
+                          color: "#1976d2",
+                          "&:hover": {
+                            backgroundColor: "rgba(25, 118, 210, 0.1)",
+                          },
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Xóa" arrow>
+                      <IconButton
+                        onClick={() => handleDelete(showtime.id)}
+                        sx={{
+                          color: "#d32f2f",
+                          "&:hover": {
+                            backgroundColor: "rgba(211, 47, 47, 0.1)",
+                          },
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))}
@@ -320,100 +548,142 @@ const AdminShowtimes = () => {
           </Table>
         </TableContainer>
 
+        {/* Add/Edit Showtime Dialog */}
         <Dialog
           open={open}
           onClose={() => setOpen(false)}
           maxWidth="sm"
           fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: 3,
+              boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+            },
+          }}
         >
-          <DialogTitle>
-            {editShowtime ? "Chỉnh Sửa Suất Chiếu" : "Thêm Suất Chiếu Mới"}
+          <DialogTitle
+            sx={{
+              fontSize: "1.5rem",
+              fontWeight: 700,
+              color: "#1a237e",
+              borderBottom: "1px solid rgba(0,0,0,0.12)",
+              pb: 2,
+            }}
+          >
+            {editShowtime ? "Chỉnh sửa Suất Chiếu" : "Thêm Suất Chiếu"}
           </DialogTitle>
-          <DialogContent>
-            <TextField
-              select
-              fullWidth
-              label="Phim"
-              value={formData.movieId}
-              onChange={(e) =>
-                setFormData({ ...formData, movieId: parseInt(e.target.value) })
-              }
-              margin="normal"
-            >
-              {movies.map((movie) => (
-                <MenuItem key={movie.id} value={movie.id}>
-                  {movie.title}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              fullWidth
-              label="Thời gian bắt đầu"
-              type="datetime-local"
-              value={formData.startTime}
-              onChange={(e) =>
-                setFormData({ ...formData, startTime: e.target.value })
-              }
-              margin="normal"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-
-            <TextField
-              fullWidth
-              label="Thời gian kết thúc"
-              type="datetime-local"
-              value={formData.endTime}
-              onChange={(e) =>
-                setFormData({ ...formData, endTime: e.target.value })
-              }
-              margin="normal"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-
-            <TextField
-              fullWidth
-              label="Phòng"
-              value={formData.room}
-              onChange={(e) =>
-                setFormData({ ...formData, room: e.target.value })
-              }
-              margin="normal"
-            />
-
-            <TextField
-              fullWidth
-              label="Giá vé"
-              type="number"
-              value={formData.price}
-              onChange={(e) =>
-                setFormData({ ...formData, price: parseFloat(e.target.value) })
-              }
-              margin="normal"
-            />
+          <DialogContent sx={{ mt: 2 }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  select
+                  fullWidth
+                  label="Phim"
+                  value={formData.movieId}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      movieId: parseInt(e.target.value),
+                    })
+                  }
+                  required
+                >
+                  {movies.map((movie) => (
+                    <MenuItem key={movie.id} value={movie.id}>
+                      {movie.title}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Thời gian bắt đầu"
+                  type="datetime-local"
+                  value={formData.startTime}
+                  onChange={(e) =>
+                    setFormData({ ...formData, startTime: e.target.value })
+                  }
+                  required
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Thời gian kết thúc"
+                  type="datetime-local"
+                  value={formData.endTime}
+                  onChange={(e) =>
+                    setFormData({ ...formData, endTime: e.target.value })
+                  }
+                  required
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Phòng"
+                  value={formData.room}
+                  onChange={(e) =>
+                    setFormData({ ...formData, room: e.target.value })
+                  }
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Giá vé"
+                  type="number"
+                  value={formData.price}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      price: parseFloat(e.target.value),
+                    })
+                  }
+                  required
+                  InputProps={{
+                    startAdornment: "₫",
+                  }}
+                />
+              </Grid>
+            </Grid>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpen(false)}>Hủy</Button>
+          <DialogActions sx={{ p: 3 }}>
+            <Button
+              onClick={() => setOpen(false)}
+              sx={{
+                color: "#666",
+                "&:hover": {
+                  backgroundColor: "rgba(0,0,0,0.04)",
+                },
+              }}
+            >
+              Hủy
+            </Button>
             <Button
               onClick={handleSubmit}
               variant="contained"
               sx={{
                 backgroundColor: "#e50914",
                 "&:hover": {
-                  backgroundColor: "#b81d24",
+                  backgroundColor: "#b71c1c",
                 },
               }}
             >
-              {editShowtime ? "Cập nhật" : "Thêm"}
+              {editShowtime ? "Lưu thay đổi" : "Thêm suất chiếu"}
             </Button>
           </DialogActions>
         </Dialog>
       </Container>
-    </Stack>
+    </Box>
   );
 };
 

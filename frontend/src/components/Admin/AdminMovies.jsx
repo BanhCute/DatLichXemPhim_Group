@@ -27,10 +27,22 @@ import {
   FormControl,
   InputLabel,
   Stack,
+  TablePagination,
+  Tooltip,
+  CircularProgress,
+  Fade,
+  useTheme,
+  Grid,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import MovieIcon from "@mui/icons-material/Movie";
+import CategoryIcon from "@mui/icons-material/Category";
+import PeopleIcon from "@mui/icons-material/People";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -64,6 +76,10 @@ const AdminMovies = () => {
   const [tabValue, setTabValue] = useState(1);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+  const theme = useTheme();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchMovies();
@@ -254,287 +270,567 @@ const AdminMovies = () => {
     }
   }, [editMovie]);
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
-    <Stack
+    <Box
       sx={{
-        background: "linear-gradient(135deg, #2c3e50 0%, #4a6a8a 100%)",
-        height: "100vh",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #1a237e 0%, #0d47a1 100%)",
+        py: 4,
       }}
     >
-      <Container width="100%" sx={{ mt: 4, mb: 4 }}>
-        <Paper sx={{ mb: 3 }}>
+      <Container maxWidth="xl">
+        {/* Admin Navigation */}
+        <Paper
+          elevation={24}
+          sx={{
+            mb: 6,
+            borderRadius: 3,
+            backgroundColor: "rgba(255, 255, 255, 0.98)",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+            overflow: "hidden",
+            position: "relative",
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "4px",
+              background: "linear-gradient(90deg, #e50914, #ff5722, #ff9800)",
+            },
+          }}
+        >
           <Tabs
             value={tabValue}
             onChange={handleTabChange}
             textColor="primary"
             indicatorColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
             sx={{
               "& .MuiTab-root": {
-                color: "#666",
+                fontFamily: "'Poppins', sans-serif",
+                fontWeight: 600,
+                color: "#37474f",
+                textTransform: "none",
+                fontSize: "1rem",
+                padding: "16px 32px",
+                transition: "all 0.3s ease",
+                minHeight: "72px",
+                "&:hover": {
+                  color: "#e50914",
+                  backgroundColor: "rgba(229, 9, 20, 0.08)",
+                },
                 "&.Mui-selected": {
                   color: "#e50914",
                 },
               },
               "& .MuiTabs-indicator": {
                 backgroundColor: "#e50914",
+                height: 3,
+                borderRadius: "3px 3px 0 0",
               },
             }}
           >
-            <Tab label="DASHBOARD" />
-            <Tab label="QUẢN LÝ PHIM" />
-            <Tab label="QUẢN LÝ THỂ LOẠI" />
-            <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
-            <Tab label="QUẢN LÝ ĐẶT VÉ" />
-            <Tab label="QUẢN LÝ SUẤT CHIẾU" />
+            <Tab
+              label="Dashboard"
+              icon={<DashboardIcon />}
+              iconPosition="start"
+            />
+            <Tab
+              label="Quản lý Phim"
+              icon={<MovieIcon />}
+              iconPosition="start"
+            />
+            <Tab
+              label="Quản lý Thể Loại"
+              icon={<CategoryIcon />}
+              iconPosition="start"
+            />
+            <Tab
+              label="Quản lý Người Dùng"
+              icon={<PeopleIcon />}
+              iconPosition="start"
+            />
+            <Tab
+              label="Quản lý Đặt Vé"
+              icon={<ReceiptIcon />}
+              iconPosition="start"
+            />
+            <Tab
+              label="Quản lý Suất Chiếu"
+              icon={<ShowChartIcon />}
+              iconPosition="start"
+            />
           </Tabs>
         </Paper>
 
-        <Stack
-        sx={{ backgroundColor: "#f5f5f5" }}
+        {/* Header and Add Button */}
+        <Box
+          sx={{
+            mb: 4,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          <Box
+          <Typography
+            variant="h4"
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              mb: 3,
-              alignItems: "center",
+              color: "#fff",
+              fontWeight: 700,
+              fontFamily: "'Poppins', sans-serif",
+              textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
             }}
           >
-            <Typography
-              variant="h4"
-              sx={{ color: "#e50914", fontWeight: "bold" }}
-            >
-              Quản Lý Phim
-            </Typography>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => {
-                setEditMovie(null);
-                setFormData({
-                  title: "",
-                  description: "",
-                  duration: "",
-                  imageUrl: "",
-                });
-                setOpen(true);
-              }}
-              sx={{
-                backgroundColor: "#e50914",
-                "&:hover": {
-                  backgroundColor: "#b81d24",
-                },
-              }}
-            >
-              Thêm Phim Mới
-            </Button>
-          </Box>
+            Quản lý Phim
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => {
+              setEditMovie(null);
+              setFormData({
+                title: "",
+                description: "",
+                duration: "",
+                imageUrl: "",
+              });
+              setSelectedGenres([]);
+              setOpen(true);
+            }}
+            sx={{
+              backgroundColor: "#e50914",
+              fontWeight: 600,
+              borderRadius: 2,
+              textTransform: "none",
+              px: 3,
+              py: 1.5,
+              "&:hover": {
+                backgroundColor: "#b71c1c",
+              },
+            }}
+          >
+            Thêm Phim Mới
+          </Button>
+        </Box>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
+        {/* Error Alert */}
+        {error && (
+          <Alert
+            severity="error"
+            sx={{
+              mb: 4,
+              borderRadius: 2,
+              backgroundColor: "rgba(211, 47, 47, 0.1)",
+              color: "#d32f2f",
+              "& .MuiAlert-icon": {
+                color: "#d32f2f",
+              },
+            }}
+          >
+            {error}
+          </Alert>
+        )}
 
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow >
-                  <TableCell>Tên Phim</TableCell>
-                  <TableCell>Thời Lượng</TableCell>
-                  <TableCell>Thể Loại</TableCell>
-                  <TableCell>Hình Ảnh</TableCell>
-                  <TableCell align="right">Thao Tác</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {movies.map((movie) => (
-                  <TableRow key={movie.id}>
-                    <TableCell>{movie.title}</TableCell>
+        {/* Movies Table */}
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: 3,
+            overflow: "hidden",
+            backgroundColor: "rgba(255, 255, 255, 0.98)",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+          }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow
+                sx={{
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                }}
+              >
+                <TableCell
+                  sx={{
+                    fontWeight: 700,
+                    color: "#37474f",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Hình ảnh
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 700,
+                    color: "#37474f",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Tên Phim
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 700,
+                    color: "#37474f",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Thời lượng
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 700,
+                    color: "#37474f",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Thể loại
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{
+                    fontWeight: 700,
+                    color: "#37474f",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Thao tác
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {movies
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((movie) => (
+                  <TableRow
+                    key={movie.id}
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.04)",
+                      },
+                    }}
+                  >
+                    <TableCell>
+                      <Box
+                        component="img"
+                        src={
+                          movie.imageUrl.startsWith("http")
+                            ? movie.imageUrl
+                            : movie.imageUrl.startsWith("/")
+                            ? movie.imageUrl // Lấy trực tiếp từ public folder
+                            : `/${movie.imageUrl}`
+                        }
+                        alt={movie.title}
+                        sx={{
+                          width: 60,
+                          height: 90,
+                          objectFit: "cover",
+                          borderRadius: 1,
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                        }}
+                        onError={(e) => {
+                          console.error("Image load error:", e);
+                          e.target.src = "/images/movies/default.jpg"; // Fallback image
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          fontWeight: 600,
+                          color: "#1a237e",
+                        }}
+                      >
+                        {movie.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "#666",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {movie.description}
+                      </Typography>
+                    </TableCell>
                     <TableCell>{movie.duration} phút</TableCell>
                     <TableCell>
-                      <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
-                        {movie.genres?.map((genre) => (
+                      <Stack direction="row" spacing={1} flexWrap="wrap">
+                        {movie.genres.map((genre) => (
                           <Chip
                             key={genre.id}
                             label={genre.name}
                             size="small"
                             sx={{
-                              backgroundColor: "#e50914",
-                              color: "white",
-                              "&:hover": {
-                                backgroundColor: "#b81d24",
-                              },
+                              backgroundColor: "rgba(25, 118, 210, 0.1)",
+                              color: "#1976d2",
+                              fontWeight: 600,
+                              my: 0.5,
                             }}
                           />
                         ))}
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      {movie.imageUrl && (
-                        <img
-                          src={movie.imageUrl}
-                          alt={movie.title}
-                          style={{ height: 50, width: "auto" }}
-                        />
-                      )}
+                      </Stack>
                     </TableCell>
                     <TableCell align="right">
-                      <IconButton
-                        onClick={() => {
-                          setEditMovie(movie);
-                          setFormData({
-                            title: movie.title,
-                            description: movie.description,
-                            duration: movie.duration.toString(),
-                            imageUrl: movie.imageUrl || "",
-                          });
-                          setOpen(true);
-                        }}
-                        sx={{ color: "#1976d2" }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleDelete(movie.id)}
-                        sx={{ color: "#d32f2f" }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      <Tooltip title="Chỉnh sửa" arrow>
+                        <IconButton
+                          onClick={() => {
+                            setEditMovie(movie);
+                            setFormData({
+                              title: movie.title,
+                              description: movie.description,
+                              duration: movie.duration.toString(),
+                              imageUrl: movie.imageUrl,
+                            });
+                            setSelectedGenres(movie.genres.map((g) => g.id));
+                            setOpen(true);
+                          }}
+                          sx={{
+                            color: "#1976d2",
+                            "&:hover": {
+                              backgroundColor: "rgba(25, 118, 210, 0.1)",
+                            },
+                          }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Xóa" arrow>
+                        <IconButton
+                          onClick={() => handleDelete(movie.id)}
+                          sx={{
+                            color: "#d32f2f",
+                            "&:hover": {
+                              backgroundColor: "rgba(211, 47, 47, 0.1)",
+                            },
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Stack>
+            </TableBody>
+          </Table>
+          <TablePagination
+            component="div"
+            count={movies.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 25]}
+            labelRowsPerPage="Số hàng mỗi trang:"
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}-${to} của ${count}`
+            }
+            sx={{
+              ".MuiTablePagination-select": {
+                fontWeight: 600,
+              },
+              ".MuiTablePagination-displayedRows": {
+                fontWeight: 600,
+              },
+            }}
+          />
+        </TableContainer>
 
+        {/* Add/Edit Movie Dialog */}
         <Dialog
           open={open}
           onClose={() => setOpen(false)}
           maxWidth="md"
           fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: 3,
+              boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+            },
+          }}
         >
-          <DialogTitle>
-            {editMovie ? "Chỉnh Sửa Phim" : "Thêm Phim Mới"}
+          <DialogTitle
+            sx={{
+              fontSize: "1.5rem",
+              fontWeight: 700,
+              color: "#1a237e",
+              borderBottom: "1px solid rgba(0,0,0,0.12)",
+              pb: 2,
+            }}
+          >
+            {editMovie ? "Chỉnh sửa Phim" : "Thêm Phim Mới"}
           </DialogTitle>
-          <DialogContent>
-            <TextField
-              margin="dense"
-              label="Tên phim"
-              fullWidth
-              required
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-            />
-            <TextField
-              margin="dense"
-              label="Mô tả"
-              fullWidth
-              required
-              multiline
-              rows={4}
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-            />
-            <TextField
-              margin="dense"
-              label="Thời lượng (phút)"
-              fullWidth
-              required
-              type="number"
-              value={formData.duration}
-              onChange={(e) =>
-                setFormData({ ...formData, duration: e.target.value })
-              }
-            />
-            <Box sx={{ mt: 2, mb: 2 }}>
-              <Button
-                component="label"
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-                sx={{
-                  backgroundColor: "#1976d2",
-                  "&:hover": {
-                    backgroundColor: "#1565c0",
-                  },
-                }}
-              >
-                Chọn hình ảnh
-                <VisuallyHiddenInput
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                />
-              </Button>
-
-              {imagePreview && (
-                <Box sx={{ mt: 2 }}>
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    style={{
-                      maxWidth: "100%",
-                      maxHeight: "200px",
-                      objectFit: "contain",
+          <DialogContent sx={{ mt: 2 }}>
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Tên phim"
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                    required
+                    variant="outlined"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        "&:hover fieldset": {
+                          borderColor: "#1976d2",
+                        },
+                      },
                     }}
                   />
-                </Box>
-              )}
-
-              {formData.imageUrl && !imagePreview && (
-                <Box sx={{ mt: 2 }}>
-                  <img
-                    src={formData.imageUrl}
-                    alt="Current"
-                    style={{
-                      maxWidth: "100%",
-                      maxHeight: "200px",
-                      objectFit: "contain",
-                    }}
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Mô tả"
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                    required
+                    multiline
+                    rows={4}
+                    variant="outlined"
                   />
-                </Box>
-              )}
-            </Box>
-            <FormControl fullWidth margin="dense">
-              <InputLabel>Thể loại</InputLabel>
-              <Select
-                multiple
-                value={selectedGenres}
-                onChange={handleGenreChange}
-                input={<OutlinedInput label="Thể loại" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => {
-                      const genre = genres.find((g) => g.id === value);
-                      return (
-                        <Chip
-                          key={value}
-                          label={genre?.name}
-                          sx={{
-                            backgroundColor: "#e50914",
-                            color: "white",
-                          }}
-                        />
-                      );
-                    })}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Thời lượng (phút)"
+                    type="number"
+                    value={formData.duration}
+                    onChange={(e) =>
+                      setFormData({ ...formData, duration: e.target.value })
+                    }
+                    required
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Thể loại</InputLabel>
+                    <Select
+                      multiple
+                      value={selectedGenres}
+                      onChange={handleGenreChange}
+                      input={<OutlinedInput label="Thể loại" />}
+                      renderValue={(selected) => (
+                        <Box
+                          sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+                        >
+                          {selected.map((value) => {
+                            const genre = genres.find((g) => g.id === value);
+                            return (
+                              <Chip
+                                key={value}
+                                label={genre ? genre.name : ""}
+                                sx={{
+                                  backgroundColor: "rgba(25, 118, 210, 0.1)",
+                                  color: "#1976d2",
+                                  fontWeight: 600,
+                                }}
+                              />
+                            );
+                          })}
+                        </Box>
+                      )}
+                    >
+                      {genres.map((genre) => (
+                        <MenuItem key={genre.id} value={genre.id}>
+                          {genre.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 2,
+                      p: 3,
+                      border: "2px dashed rgba(0,0,0,0.12)",
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Button
+                      component="label"
+                      variant="contained"
+                      startIcon={<CloudUploadIcon />}
+                      sx={{
+                        backgroundColor: "#1976d2",
+                        "&:hover": {
+                          backgroundColor: "#1565c0",
+                        },
+                      }}
+                    >
+                      Tải lên hình ảnh
+                      <VisuallyHiddenInput
+                        type="file"
+                        onChange={handleFileSelect}
+                        accept="image/*"
+                      />
+                    </Button>
+                    {(imagePreview || formData.imageUrl) && (
+                      <Box
+                        component="img"
+                        src={
+                          imagePreview ||
+                          (formData.imageUrl?.startsWith("http")
+                            ? formData.imageUrl
+                            : formData.imageUrl?.startsWith("/")
+                            ? formData.imageUrl // Lấy trực tiếp từ public folder
+                            : `/${formData.imageUrl}`)
+                        }
+                        alt="Preview"
+                        sx={{
+                          width: 200,
+                          height: 300,
+                          objectFit: "cover",
+                          borderRadius: 2,
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                        }}
+                        onError={(e) => {
+                          console.error("Image load error:", e);
+                          e.target.src = "/images/movies/default.jpg"; // Fallback image
+                        }}
+                      />
+                    )}
                   </Box>
-                )}
-              >
-                {genres.map((genre) => (
-                  <MenuItem key={genre.id} value={genre.id}>
-                    {genre.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                </Grid>
+              </Grid>
+            </form>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpen(false)} sx={{ color: "#9e9e9e" }}>
+          <DialogActions sx={{ p: 3 }}>
+            <Button
+              onClick={() => setOpen(false)}
+              sx={{
+                color: "#666",
+                "&:hover": {
+                  backgroundColor: "rgba(0,0,0,0.04)",
+                },
+              }}
+            >
               Hủy
             </Button>
             <Button
@@ -543,16 +839,16 @@ const AdminMovies = () => {
               sx={{
                 backgroundColor: "#e50914",
                 "&:hover": {
-                  backgroundColor: "#b81d24",
+                  backgroundColor: "#b71c1c",
                 },
               }}
             >
-              {editMovie ? "Cập Nhật" : "Thêm"}
+              {editMovie ? "Lưu thay đổi" : "Thêm phim"}
             </Button>
           </DialogActions>
         </Dialog>
       </Container>
-    </Stack>
+    </Box>
   );
 };
 

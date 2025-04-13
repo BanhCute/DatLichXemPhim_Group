@@ -6,12 +6,13 @@ import {
   Typography,
   Container,
   Paper,
+  Fade,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-
 import { Email, Lock } from "@mui/icons-material";
 import { motion } from "framer-motion";
-
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ const Login = () => {
   });
   const [error, setError] = useState("");
 
-
+  // Xóa email đã lưu sau khi load
   useEffect(() => {
     const registeredEmail = localStorage.getItem("registeredEmail");
     if (registeredEmail) {
@@ -45,10 +46,7 @@ const Login = () => {
         return res.json();
       })
       .then((data) => {
-        // Lưu token
         localStorage.setItem("token", data.data);
-
-        // Lấy thông tin user để kiểm tra role
         return fetch("http://localhost:5000/api/auth/me", {
           headers: {
             Authorization: `Bearer ${data.data}`,
@@ -57,29 +55,21 @@ const Login = () => {
       })
       .then((res) => res.json())
       .then((userData) => {
-        // Lưu role user
         localStorage.setItem("userRole", userData.data.role);
-
-        // Chuyển hướng dựa vào role
+        const redirectUrl = localStorage.getItem("redirectUrl");
         if (userData.data.role === "ADMIN") {
-          window.location.href = "/admin/movies"; // Trang quản lý phim cho admin
+          window.location.href = "/admin/movies";
+        } else if (redirectUrl) {
+          localStorage.removeItem("redirectUrl");
+          window.location.href = redirectUrl;
         } else {
-          // Redirect user thường
-          const redirectUrl = localStorage.getItem("redirectUrl");
-          if (redirectUrl) {
-            localStorage.removeItem("redirectUrl");
-            window.location.href = redirectUrl;
-          } else {
-            window.location.href = "/movies";
-          }
+          window.location.href = "/movies";
         }
-
         window.dispatchEvent(new Event("storage"));
       })
       .catch((err) => {
         setError(err.message);
       });
-
   };
 
   // Hiệu ứng chuyển động cho container và các thành phần con
@@ -104,111 +94,17 @@ const Login = () => {
       y: 0,
       transition: { duration: 0.6, ease: "easeOut" },
     },
-
   };
 
   return (
     <Box
       sx={{
-
-        position: "fixed",
-        top: "64px", // nếu có navbar cao 64px
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundImage: 'url("/images/anhNen/anhNenAuth.jpg")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-
         minHeight: "100vh",
         background: "linear-gradient(145deg, #0f172a 0%, #1e293b 100%)",
-
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         px: 2,
-
-      }}
-    >
-      <Container maxWidth="sm">
-        <Paper
-          elevation={10}
-          sx={{
-            p: 5,
-            backgroundColor: "rgba(0, 0, 0, 0.85)",
-            borderRadius: 4,
-            color: "#fff",
-            width: "100%",
-          }}
-        >
-          <Typography
-            component="h1"
-            variant="h4"
-            align="center"
-            gutterBottom
-            sx={{ fontWeight: "bold", letterSpacing: 1 }}
-          >
-            🎬 RẠP PHIM LGTV
-          </Typography>
-          <Typography variant="h6" align="center" sx={{ mb: 2 }}>
-            Đăng nhập tài khoản của bạn
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              variant="filled"
-              InputProps={{ style: { color: "#fff" } }}
-              InputLabelProps={{ style: { color: "#ccc" } }}
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Mật khẩu"
-              type="password"
-              variant="filled"
-              InputProps={{ style: { color: "#fff" } }}
-              InputLabelProps={{ style: { color: "#ccc" } }}
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 3,
-                backgroundColor: "#e50914",
-                fontWeight: "bold",
-                "&:hover": {
-                  backgroundColor: "#b81d24",
-                },
-              }}
-            >
-              Đăng nhập
-            </Button>
-            <Typography variant="h6" align="center" sx={{ mt: 2 }}>
-              Bạn chưa có tài khoản?{" "}
-              <Link nk to="/register" style={{ color: "#e50914" }}>
-                Đăng ký
-              </Link>
-            </Typography>
-          </Box>
-        </Paper>
-
         position: "relative",
         overflow: "hidden",
         paddingBottom: "env(safe-area-inset-bottom)",
@@ -524,7 +420,7 @@ const Login = () => {
               </motion.div>
             </Box>
           </Paper>
-        </Fade
+        </Fade>
       </Container>
     </Box>
   );

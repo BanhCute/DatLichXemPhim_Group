@@ -2,29 +2,17 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import Navbar from "./components/Layout/Navbar";
-<<<<<<< HEAD
-import Footer from "./components/Layout/Footer"; // 👉 import Footer ở đây
-import ProtectedRoute from "./components/Auth/ProtectedRoute";
-
-=======
 import Footer from "./components/Layout/Footer";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
->>>>>>> main
 import MoviesList from "./components/Movies/MoviesList";
 import MovieDetail from "./components/Movies/MovieDetail";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
-<<<<<<< HEAD
-import SeatSelection from "./components/Bookings/SeatSelection";
-import BookingConfirmation from "./components/Bookings/BookingConfirmation";
-import Profile from "./components/User/Profile";
-=======
 
 import SeatSelection from "./components/Bookings/SeatSelection";
 import BookingConfirmation from "./components/Bookings/BookingConfirmation";
 import Profile from "./components/User/Profile";
 
->>>>>>> main
 import Home from "./components/Home/Home";
 import BookingSuccess from "./components/Bookings/BookingSuccess";
 import BookingHistory from "./components/Bookings/BookingHistory";
@@ -60,10 +48,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-<<<<<<< HEAD
-=======
 
->>>>>>> main
             {/* Admin Routes */}
             <Route
               path="/admin"
@@ -158,10 +143,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-<<<<<<< HEAD
-=======
 
->>>>>>> main
           </Routes>
         </Box>
         <Footer />

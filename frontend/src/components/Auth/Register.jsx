@@ -1,8 +1,4 @@
 import React, { useState } from "react";
-
-import { Box, TextField, Button, Typography, Paper } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-
 import {
   Box,
   TextField,
@@ -69,19 +65,6 @@ const Register = () => {
     }
   };
 
-
-  return (
-    <Box
-      sx={{
-        position: "fixed",
-        top: "64px",
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundImage: 'url("/images/anhNen/anhNenAuth.jpg")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-
   // Hiệu ứng chuyển động cho container và các thành phần con
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.95 },
@@ -111,138 +94,10 @@ const Register = () => {
       sx={{
         minHeight: "100vh",
         background: "linear-gradient(145deg, #0f172a 0%, #1e293b 100%)",
-
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         px: 2,
-
-      }}
-    >
-      <Paper
-        elevation={10}
-        sx={{
-          p: 5,
-          backgroundColor: "rgba(0, 0, 0, 0.85)",
-          borderRadius: 4,
-          color: "#fff",
-          width: "100%",
-          maxWidth: 440,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            mb: 2,
-          }}
-        >
-          <Typography
-            component="h1"
-            variant="h4"
-            align="center"
-            gutterBottom
-            sx={{ fontWeight: "bold", letterSpacing: 1, color: "#fff" }}
-          >
-            🎬 RẠP PHIM LGTV
-          </Typography>
-        </Box>
-
-        <Typography variant="h6" align="center" sx={{ mb: 2, color: "#ccc" }}>
-          Đăng ký tài khoản của bạn
-        </Typography>
-
-        {error && (
-          <Typography
-            color="error"
-            align="center"
-            sx={{
-              mb: 2,
-              backgroundColor: "rgba(255,0,0,0.1)",
-              p: 1,
-              borderRadius: 1,
-            }}
-          >
-            {error}
-          </Typography>
-        )}
-
-        <Box component="form" onSubmit={handleSubmit}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Họ tên"
-            name="name"
-            variant="filled"
-            InputProps={{ style: { color: "#fff" } }}
-            InputLabelProps={{ style: { color: "#ccc" } }}
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Email"
-            name="email"
-            type="email"
-            variant="filled"
-            InputProps={{ style: { color: "#fff" } }}
-            InputLabelProps={{ style: { color: "#ccc" } }}
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Mật khẩu"
-            name="password"
-            type="password"
-            variant="filled"
-            InputProps={{ style: { color: "#fff" } }}
-            InputLabelProps={{ style: { color: "#ccc" } }}
-            value={formData.password}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Xác nhận mật khẩu"
-            name="confirmPassword"
-            type="password"
-            variant="filled"
-            InputProps={{ style: { color: "#fff" } }}
-            InputLabelProps={{ style: { color: "#ccc" } }}
-            value={formData.confirmPassword}
-            onChange={(e) =>
-              setFormData({ ...formData, confirmPassword: e.target.value })
-            }
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{
-              mt: 3,
-              backgroundColor: "#e50914",
-              fontWeight: "bold",
-              "&:hover": {
-                backgroundColor: "#b81d24",
-              },
-            }}
-          >
-            Đăng ký
-          </Button>
-        </Box>
-      </Paper>
-
         position: "relative",
         overflow: "hidden",
         paddingBottom: "env(safe-area-inset-bottom)",
@@ -661,11 +516,9 @@ const Register = () => {
             </Paper>
           </motion.div>
         </Fade>
-      </Box
+      </Box>
     </Box>
   );
 };
 
-
 export default Register;
-

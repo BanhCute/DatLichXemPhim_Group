@@ -6,12 +6,13 @@ import {
   Typography,
   Container,
   Paper,
+  Fade,
+  InputAdornment,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import { Email, Lock } from "@mui/icons-material";
 import { motion } from "framer-motion";
-
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +20,6 @@ const Login = () => {
     password: "",
   });
   const [error, setError] = useState("");
-
 
   useEffect(() => {
     const registeredEmail = localStorage.getItem("registeredEmail");
@@ -79,7 +79,6 @@ const Login = () => {
       .catch((err) => {
         setError(err.message);
       });
-
   };
 
   // Hiệu ứng chuyển động cho container và các thành phần con
@@ -104,13 +103,11 @@ const Login = () => {
       y: 0,
       transition: { duration: 0.6, ease: "easeOut" },
     },
-
   };
 
   return (
     <Box
       sx={{
-
         position: "fixed",
         top: "64px", // nếu có navbar cao 64px
         left: 0,
@@ -127,7 +124,6 @@ const Login = () => {
         alignItems: "center",
         justifyContent: "center",
         px: 2,
-
       }}
     >
       <Container maxWidth="sm">
@@ -208,12 +204,8 @@ const Login = () => {
             </Typography>
           </Box>
         </Paper>
+      </Container>
 
-        position: "relative",
-        overflow: "hidden",
-        paddingBottom: "env(safe-area-inset-bottom)",
-      }}
-    >
       {/* Hiệu ứng hạt (particle effect) trên nền */}
       <Box
         sx={{
@@ -378,7 +370,9 @@ const Login = () => {
                       },
                     },
                   }}
-                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.4)" } }}
+                  InputLabelProps={{
+                    sx: { color: "rgba(255, 255, 255, 0.4)" },
+                  }}
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": {
@@ -430,7 +424,9 @@ const Login = () => {
                       },
                     },
                   }}
-                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.4)" } }}
+                  InputLabelProps={{
+                    sx: { color: "rgba(255, 255, 255, 0.4)" },
+                  }}
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": {
@@ -524,10 +520,9 @@ const Login = () => {
               </motion.div>
             </Box>
           </Paper>
-        </Fade
+        </Fade>
       </Container>
     </Box>
   );
 };
-
 export default Login;

@@ -11,7 +11,7 @@ import {
   Stack,
   Button,
 } from "@mui/material";
-import ShowTimesList from "../Showtimes/ShowTimesList";
+import ShowTimesList from "../ShowTimes/ShowTimesList";
 
 const MovieDetail = () => {
   const { id } = useParams();

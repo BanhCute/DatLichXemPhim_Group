@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
   Button,
+  Box,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -20,6 +21,7 @@ import {
   Tab,
   MenuItem,
   Select,
+  Stack,
   FormControl,
   InputLabel,
 } from "@mui/material";
@@ -148,176 +150,196 @@ const AdminUsers = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Paper sx={{ mb: 3 }}>
-        <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
-          textColor="primary"
-          indicatorColor="primary"
-          sx={{
-            "& .MuiTab-root": {
-              color: "#666",
-              "&.Mui-selected": {
-                color: "#e50914",
-              },
-            },
-            "& .MuiTabs-indicator": {
-              backgroundColor: "#e50914",
-            },
-          }}
-        >
-          <Tab label="DASHBOARD" />
-          <Tab label="QUẢN LÝ PHIM" />
-          <Tab label="QUẢN LÝ THỂ LOẠI" />
-          <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
-          <Tab label="QUẢN LÝ ĐẶT VÉ" />
-          <Tab label="QUẢN LÝ SUẤT CHIẾU" />
-        </Tabs>
-      </Paper>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "20px",
-        }}
-      >
-        <Typography variant="h5" sx={{ color: "#e50914", fontWeight: "bold" }}>
-          Quản Lý Người Dùng
-        </Typography>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "#e50914",
-            "&:hover": {
-              backgroundColor: "#b81d24",
-            },
-          }}
-          onClick={() => {
-            setEditUser(null);
-            setFormData({
-              email: "",
-              name: "",
-              password: "",
-              role: "USER",
-            });
-            setOpen(true);
-          }}
-        >
-          Thêm Người Dùng
-        </Button>
-      </div>
-
-      {error && (
-        <Typography color="error" sx={{ mb: 2 }}>
-          {error}
-        </Typography>
-      )}
-
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Email</TableCell>
-              <TableCell>Tên</TableCell>
-              <TableCell>Vai trò</TableCell>
-              <TableCell align="right">Thao tác</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    onClick={() => {
-                      setEditUser(user);
-                      setFormData({
-                        email: user.email,
-                        name: user.name,
-                        role: user.role,
-                      });
-                      setOpen(true);
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(user.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>
-          {editUser ? "Chỉnh Sửa Người Dùng" : "Thêm Người Dùng Mới"}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            fullWidth
-            label="Email"
-            margin="normal"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-          />
-          <TextField
-            fullWidth
-            label="Tên"
-            margin="normal"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-          {!editUser && (
-            <TextField
-              fullWidth
-              label="Mật khẩu"
-              type="password"
-              margin="normal"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
-          )}
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Vai trò</InputLabel>
-            <Select
-              value={formData.role}
-              onChange={(e) =>
-                setFormData({ ...formData, role: e.target.value })
-              }
-            >
-              <MenuItem value="USER">User</MenuItem>
-              <MenuItem value="ADMIN">Admin</MenuItem>
-            </Select>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Hủy</Button>
-          <Button
-            onClick={handleSubmit}
-            variant="contained"
+    <Stack
+      sx={{
+        background: "linear-gradient(135deg, #2c3e50 0%, #4a6a8a 100%)",
+        height: "auto",
+      }}
+    >
+      <Container width="100%" sx={{ mt: 4, mb: 4 }}>
+        <Paper sx={{ mb: 3 }}>
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            textColor="primary"
+            indicatorColor="primary"
             sx={{
-              backgroundColor: "#e50914",
-              "&:hover": {
-                backgroundColor: "#b81d24",
+              "& .MuiTab-root": {
+                color: "#666",
+                "&.Mui-selected": {
+                  color: "#e50914",
+                },
+              },
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#e50914",
               },
             }}
           >
-            {editUser ? "Cập nhật" : "Thêm"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+            <Tab label="DASHBOARD" />
+            <Tab label="QUẢN LÝ PHIM" />
+            <Tab label="QUẢN LÝ THỂ LOẠI" />
+            <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
+            <Tab label="QUẢN LÝ ĐẶT VÉ" />
+            <Tab label="QUẢN LÝ SUẤT CHIẾU" />
+          </Tabs>
+        </Paper>
+
+        <Stack
+          style={{
+            backgroundColor: "#f5f5f5" 
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex", 
+              alignItems: "center", 
+              justifyContent: "space-between",
+              mb: 3,
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              variant="h5"
+              sx={{ color: "#e50914", fontWeight: "bold" }}
+            >
+              Quản Lý Người Dùng
+            </Typography>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#e50914",
+                "&:hover": {
+                  backgroundColor: "#b81d24",
+                },
+              }}
+              onClick={() => {
+                setEditUser(null);
+                setFormData({
+                  email: "",
+                  name: "",
+                  password: "",
+                  role: "USER",
+                });
+                setOpen(true);
+              }}
+            >
+              Thêm Người Dùng
+            </Button>
+          </Box>
+        </Stack>
+
+        {error && (
+          <Typography color="error" sx={{ mb: 2 }}>
+            {error}
+          </Typography>
+        )}
+
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Email</TableCell>
+                <TableCell>Tên</TableCell>
+                <TableCell>Vai trò</TableCell>
+                <TableCell align="right">Thao tác</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      onClick={() => {
+                        setEditUser(user);
+                        setFormData({
+                          email: user.email,
+                          name: user.name,
+                          role: user.role,
+                        });
+                        setOpen(true);
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(user.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>
+            {editUser ? "Chỉnh Sửa Người Dùng" : "Thêm Người Dùng Mới"}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              fullWidth
+              label="Email"
+              margin="normal"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+            />
+            <TextField
+              fullWidth
+              label="Tên"
+              margin="normal"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+            />
+            {!editUser && (
+              <TextField
+                fullWidth
+                label="Mật khẩu"
+                type="password"
+                margin="normal"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
+            )}
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Vai trò</InputLabel>
+              <Select
+                value={formData.role}
+                onChange={(e) =>
+                  setFormData({ ...formData, role: e.target.value })
+                }
+              >
+                <MenuItem value="USER">User</MenuItem>
+                <MenuItem value="ADMIN">Admin</MenuItem>
+              </Select>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)}>Hủy</Button>
+            <Button
+              onClick={handleSubmit}
+              variant="contained"
+              sx={{
+                backgroundColor: "#e50914",
+                "&:hover": {
+                  backgroundColor: "#b81d24",
+                },
+              }}
+            >
+              {editUser ? "Cập nhật" : "Thêm"}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </Stack>
   );
 };
 

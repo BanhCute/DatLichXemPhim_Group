@@ -26,6 +26,7 @@ import {
   OutlinedInput,
   FormControl,
   InputLabel,
+  Stack,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -254,290 +255,304 @@ const AdminMovies = () => {
   }, [editMovie]);
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Paper sx={{ mb: 3 }}>
-        <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
-          textColor="primary"
-          indicatorColor="primary"
-          sx={{
-            "& .MuiTab-root": {
-              color: "#666",
-              "&.Mui-selected": {
-                color: "#e50914",
-              },
-            },
-            "& .MuiTabs-indicator": {
-              backgroundColor: "#e50914",
-            },
-          }}
-        >
-          <Tab label="DASHBOARD" />
-          <Tab label="QUẢN LÝ PHIM" />
-          <Tab label="QUẢN LÝ THỂ LOẠI" />
-          <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
-          <Tab label="QUẢN LÝ ĐẶT VÉ" />
-          <Tab label="QUẢN LÝ SUẤT CHIẾU" />
-        </Tabs>
-      </Paper>
-
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          mb: 3,
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h4" sx={{ color: "#e50914", fontWeight: "bold" }}>
-          Quản Lý Phim
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => {
-            setEditMovie(null);
-            setFormData({
-              title: "",
-              description: "",
-              duration: "",
-              imageUrl: "",
-            });
-            setOpen(true);
-          }}
-          sx={{
-            backgroundColor: "#e50914",
-            "&:hover": {
-              backgroundColor: "#b81d24",
-            },
-          }}
-        >
-          Thêm Phim Mới
-        </Button>
-      </Box>
-
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
-
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-              <TableCell>Tên Phim</TableCell>
-              <TableCell>Thời Lượng</TableCell>
-              <TableCell>Thể Loại</TableCell>
-              <TableCell>Hình Ảnh</TableCell>
-              <TableCell align="right">Thao Tác</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {movies.map((movie) => (
-              <TableRow key={movie.id}>
-                <TableCell>{movie.title}</TableCell>
-                <TableCell>{movie.duration} phút</TableCell>
-                <TableCell>
-                  <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
-                    {movie.genres?.map((genre) => (
-                      <Chip
-                        key={genre.id}
-                        label={genre.name}
-                        size="small"
-                        sx={{
-                          backgroundColor: "#e50914",
-                          color: "white",
-                          "&:hover": {
-                            backgroundColor: "#b81d24",
-                          },
-                        }}
-                      />
-                    ))}
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  {movie.imageUrl && (
-                    <img
-                      src={movie.imageUrl}
-                      alt={movie.title}
-                      style={{ height: 50, width: "auto" }}
-                    />
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    onClick={() => {
-                      setEditMovie(movie);
-                      setFormData({
-                        title: movie.title,
-                        description: movie.description,
-                        duration: movie.duration.toString(),
-                        imageUrl: movie.imageUrl || "",
-                      });
-                      setOpen(true);
-                    }}
-                    sx={{ color: "#1976d2" }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => handleDelete(movie.id)}
-                    sx={{ color: "#d32f2f" }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>
-          {editMovie ? "Chỉnh Sửa Phim" : "Thêm Phim Mới"}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label="Tên phim"
-            fullWidth
-            required
-            value={formData.title}
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Mô tả"
-            fullWidth
-            required
-            multiline
-            rows={4}
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Thời lượng (phút)"
-            fullWidth
-            required
-            type="number"
-            value={formData.duration}
-            onChange={(e) =>
-              setFormData({ ...formData, duration: e.target.value })
-            }
-          />
-          <Box sx={{ mt: 2, mb: 2 }}>
-            <Button
-              component="label"
-              variant="contained"
-              startIcon={<CloudUploadIcon />}
-              sx={{
-                backgroundColor: "#1976d2",
-                "&:hover": {
-                  backgroundColor: "#1565c0",
-                },
-              }}
-            >
-              Chọn hình ảnh
-              <VisuallyHiddenInput
-                type="file"
-                accept="image/*"
-                onChange={handleFileSelect}
-              />
-            </Button>
-
-            {imagePreview && (
-              <Box sx={{ mt: 2 }}>
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: "200px",
-                    objectFit: "contain",
-                  }}
-                />
-              </Box>
-            )}
-
-            {formData.imageUrl && !imagePreview && (
-              <Box sx={{ mt: 2 }}>
-                <img
-                  src={formData.imageUrl}
-                  alt="Current"
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: "200px",
-                    objectFit: "contain",
-                  }}
-                />
-              </Box>
-            )}
-          </Box>
-          <FormControl fullWidth margin="dense">
-            <InputLabel>Thể loại</InputLabel>
-            <Select
-              multiple
-              value={selectedGenres}
-              onChange={handleGenreChange}
-              input={<OutlinedInput label="Thể loại" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {selected.map((value) => {
-                    const genre = genres.find((g) => g.id === value);
-                    return (
-                      <Chip
-                        key={value}
-                        label={genre?.name}
-                        sx={{
-                          backgroundColor: "#e50914",
-                          color: "white",
-                        }}
-                      />
-                    );
-                  })}
-                </Box>
-              )}
-            >
-              {genres.map((genre) => (
-                <MenuItem key={genre.id} value={genre.id}>
-                  {genre.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} sx={{ color: "#9e9e9e" }}>
-            Hủy
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            variant="contained"
+    <Stack
+      sx={{
+        background: "linear-gradient(135deg, #2c3e50 0%, #4a6a8a 100%)",
+        height: "100vh",
+      }}
+    >
+      <Container width="100%" sx={{ mt: 4, mb: 4 }}>
+        <Paper sx={{ mb: 3 }}>
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            textColor="primary"
+            indicatorColor="primary"
             sx={{
-              backgroundColor: "#e50914",
-              "&:hover": {
-                backgroundColor: "#b81d24",
+              "& .MuiTab-root": {
+                color: "#666",
+                "&.Mui-selected": {
+                  color: "#e50914",
+                },
+              },
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#e50914",
               },
             }}
           >
-            {editMovie ? "Cập Nhật" : "Thêm"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+            <Tab label="DASHBOARD" />
+            <Tab label="QUẢN LÝ PHIM" />
+            <Tab label="QUẢN LÝ THỂ LOẠI" />
+            <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
+            <Tab label="QUẢN LÝ ĐẶT VÉ" />
+            <Tab label="QUẢN LÝ SUẤT CHIẾU" />
+          </Tabs>
+        </Paper>
+
+        <Stack
+        sx={{ backgroundColor: "#f5f5f5" }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mb: 3,
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{ color: "#e50914", fontWeight: "bold" }}
+            >
+              Quản Lý Phim
+            </Typography>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => {
+                setEditMovie(null);
+                setFormData({
+                  title: "",
+                  description: "",
+                  duration: "",
+                  imageUrl: "",
+                });
+                setOpen(true);
+              }}
+              sx={{
+                backgroundColor: "#e50914",
+                "&:hover": {
+                  backgroundColor: "#b81d24",
+                },
+              }}
+            >
+              Thêm Phim Mới
+            </Button>
+          </Box>
+
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow >
+                  <TableCell>Tên Phim</TableCell>
+                  <TableCell>Thời Lượng</TableCell>
+                  <TableCell>Thể Loại</TableCell>
+                  <TableCell>Hình Ảnh</TableCell>
+                  <TableCell align="right">Thao Tác</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {movies.map((movie) => (
+                  <TableRow key={movie.id}>
+                    <TableCell>{movie.title}</TableCell>
+                    <TableCell>{movie.duration} phút</TableCell>
+                    <TableCell>
+                      <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
+                        {movie.genres?.map((genre) => (
+                          <Chip
+                            key={genre.id}
+                            label={genre.name}
+                            size="small"
+                            sx={{
+                              backgroundColor: "#e50914",
+                              color: "white",
+                              "&:hover": {
+                                backgroundColor: "#b81d24",
+                              },
+                            }}
+                          />
+                        ))}
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      {movie.imageUrl && (
+                        <img
+                          src={movie.imageUrl}
+                          alt={movie.title}
+                          style={{ height: 50, width: "auto" }}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        onClick={() => {
+                          setEditMovie(movie);
+                          setFormData({
+                            title: movie.title,
+                            description: movie.description,
+                            duration: movie.duration.toString(),
+                            imageUrl: movie.imageUrl || "",
+                          });
+                          setOpen(true);
+                        }}
+                        sx={{ color: "#1976d2" }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleDelete(movie.id)}
+                        sx={{ color: "#d32f2f" }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Stack>
+
+        <Dialog
+          open={open}
+          onClose={() => setOpen(false)}
+          maxWidth="md"
+          fullWidth
+        >
+          <DialogTitle>
+            {editMovie ? "Chỉnh Sửa Phim" : "Thêm Phim Mới"}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              label="Tên phim"
+              fullWidth
+              required
+              value={formData.title}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="Mô tả"
+              fullWidth
+              required
+              multiline
+              rows={4}
+              value={formData.description}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="Thời lượng (phút)"
+              fullWidth
+              required
+              type="number"
+              value={formData.duration}
+              onChange={(e) =>
+                setFormData({ ...formData, duration: e.target.value })
+              }
+            />
+            <Box sx={{ mt: 2, mb: 2 }}>
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+                sx={{
+                  backgroundColor: "#1976d2",
+                  "&:hover": {
+                    backgroundColor: "#1565c0",
+                  },
+                }}
+              >
+                Chọn hình ảnh
+                <VisuallyHiddenInput
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                />
+              </Button>
+
+              {imagePreview && (
+                <Box sx={{ mt: 2 }}>
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: "200px",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Box>
+              )}
+
+              {formData.imageUrl && !imagePreview && (
+                <Box sx={{ mt: 2 }}>
+                  <img
+                    src={formData.imageUrl}
+                    alt="Current"
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: "200px",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Box>
+              )}
+            </Box>
+            <FormControl fullWidth margin="dense">
+              <InputLabel>Thể loại</InputLabel>
+              <Select
+                multiple
+                value={selectedGenres}
+                onChange={handleGenreChange}
+                input={<OutlinedInput label="Thể loại" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => {
+                      const genre = genres.find((g) => g.id === value);
+                      return (
+                        <Chip
+                          key={value}
+                          label={genre?.name}
+                          sx={{
+                            backgroundColor: "#e50914",
+                            color: "white",
+                          }}
+                        />
+                      );
+                    })}
+                  </Box>
+                )}
+              >
+                {genres.map((genre) => (
+                  <MenuItem key={genre.id} value={genre.id}>
+                    {genre.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} sx={{ color: "#9e9e9e" }}>
+              Hủy
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              variant="contained"
+              sx={{
+                backgroundColor: "#e50914",
+                "&:hover": {
+                  backgroundColor: "#b81d24",
+                },
+              }}
+            >
+              {editMovie ? "Cập Nhật" : "Thêm"}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </Stack>
   );
 };
 

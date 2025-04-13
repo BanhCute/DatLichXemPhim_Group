@@ -17,6 +17,8 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Stack,
+  Box,
   MenuItem,
   IconButton,
 } from "@mui/material";
@@ -180,223 +182,238 @@ const AdminShowtimes = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Paper sx={{ mb: 3 }}>
-        <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
-          textColor="primary"
-          indicatorColor="primary"
-          sx={{
-            "& .MuiTab-root": {
-              color: "#666",
-              "&.Mui-selected": {
-                color: "#e50914",
-              },
-            },
-            "& .MuiTabs-indicator": {
-              backgroundColor: "#e50914",
-            },
-          }}
-        >
-          <Tab label="DASHBOARD" />
-          <Tab label="QUẢN LÝ PHIM" />
-          <Tab label="QUẢN LÝ THỂ LOẠI" />
-          <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
-          <Tab label="QUẢN LÝ ĐẶT VÉ" />
-          <Tab label="QUẢN LÝ SUẤT CHIẾU" />
-        </Tabs>
-      </Paper>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "20px",
-        }}
-      >
-        <Typography variant="h5" sx={{ color: "#e50914", fontWeight: "bold" }}>
-          Quản Lý Suất Chiếu
-        </Typography>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "#e50914",
-            "&:hover": {
-              backgroundColor: "#b81d24",
-            },
-          }}
-          onClick={() => {
-            setEditShowtime(null);
-            setFormData({
-              movieId: "",
-              startTime: moment().format("YYYY-MM-DDTHH:mm"),
-              endTime: moment().add(2, "hours").format("YYYY-MM-DDTHH:mm"),
-              room: "",
-              price: "",
-            });
-            setOpen(true);
-          }}
-        >
-          Thêm Suất Chiếu
-        </Button>
-      </div>
-
-      {error && (
-        <Typography color="error" sx={{ mb: 2 }}>
-          {error}
-        </Typography>
-      )}
-
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Phim</TableCell>
-              <TableCell>Thời gian bắt đầu</TableCell>
-              <TableCell>Thời gian kết thúc</TableCell>
-              <TableCell>Phòng</TableCell>
-              <TableCell>Giá vé</TableCell>
-              <TableCell>Thao tác</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {showtimes.map((showtime) => (
-              <TableRow key={showtime.id}>
-                <TableCell>{showtime.movie?.title}</TableCell>
-                <TableCell>
-                  {moment(showtime.startTime).format("DD/MM/YYYY HH:mm")}
-                </TableCell>
-                <TableCell>
-                  {moment(showtime.endTime).format("DD/MM/YYYY HH:mm")}
-                </TableCell>
-                <TableCell>{showtime.room}</TableCell>
-                <TableCell>{formatCurrency(showtime.price)}</TableCell>
-                <TableCell>
-                  <IconButton
-                    onClick={() => {
-                      setEditShowtime(showtime);
-                      setFormData({
-                        movieId: showtime.movieId,
-                        startTime: moment(showtime.startTime).format(
-                          "YYYY-MM-DDTHH:mm"
-                        ),
-                        endTime: moment(showtime.endTime).format(
-                          "YYYY-MM-DDTHH:mm"
-                        ),
-                        room: showtime.room,
-                        price: showtime.price,
-                      });
-                      setOpen(true);
-                    }}
-                    sx={{ color: "#e50914" }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => handleDelete(showtime.id)}
-                    sx={{ color: "#e50914" }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>
-          {editShowtime ? "Chỉnh Sửa Suất Chiếu" : "Thêm Suất Chiếu Mới"}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            select
-            fullWidth
-            label="Phim"
-            value={formData.movieId}
-            onChange={(e) =>
-              setFormData({ ...formData, movieId: parseInt(e.target.value) })
-            }
-            margin="normal"
-          >
-            {movies.map((movie) => (
-              <MenuItem key={movie.id} value={movie.id}>
-                {movie.title}
-              </MenuItem>
-            ))}
-          </TextField>
-
-          <TextField
-            fullWidth
-            label="Thời gian bắt đầu"
-            type="datetime-local"
-            value={formData.startTime}
-            onChange={(e) =>
-              setFormData({ ...formData, startTime: e.target.value })
-            }
-            margin="normal"
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-
-          <TextField
-            fullWidth
-            label="Thời gian kết thúc"
-            type="datetime-local"
-            value={formData.endTime}
-            onChange={(e) =>
-              setFormData({ ...formData, endTime: e.target.value })
-            }
-            margin="normal"
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-
-          <TextField
-            fullWidth
-            label="Phòng"
-            value={formData.room}
-            onChange={(e) => setFormData({ ...formData, room: e.target.value })}
-            margin="normal"
-          />
-
-          <TextField
-            fullWidth
-            label="Giá vé"
-            type="number"
-            value={formData.price}
-            onChange={(e) =>
-              setFormData({ ...formData, price: parseFloat(e.target.value) })
-            }
-            margin="normal"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Hủy</Button>
-          <Button
-            onClick={handleSubmit}
-            variant="contained"
+    <Stack
+      sx={{
+        background: "linear-gradient(135deg, #2c3e50 0%, #4a6a8a 100%)",
+        height: "100vh",
+      }}
+    >
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Paper sx={{ mb: 3 }}>
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            textColor="primary"
+            indicatorColor="primary"
             sx={{
-              backgroundColor: "#e50914",
-              "&:hover": {
-                backgroundColor: "#b81d24",
+              "& .MuiTab-root": {
+                color: "#666",
+                "&.Mui-selected": {
+                  color: "#e50914",
+                },
+              },
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#e50914",
               },
             }}
           >
-            {editShowtime ? "Cập nhật" : "Thêm"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+            <Tab label="DASHBOARD" />
+            <Tab label="QUẢN LÝ PHIM" />
+            <Tab label="QUẢN LÝ THỂ LOẠI" />
+            <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
+            <Tab label="QUẢN LÝ ĐẶT VÉ" />
+            <Tab label="QUẢN LÝ SUẤT CHIẾU" />
+          </Tabs>
+        </Paper>
+
+        <Stack sx={{ backgroundColor: "#f5f5f5" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mb: 3,
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              variant="h5"
+              sx={{ color: "#e50914", fontWeight: "bold" }}
+            >
+              Quản Lý Suất Chiếu
+            </Typography>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#e50914",
+                "&:hover": {
+                  backgroundColor: "#b81d24",
+                },
+              }}
+              onClick={() => {
+                setEditShowtime(null);
+                setFormData({
+                  movieId: "",
+                  startTime: moment().format("YYYY-MM-DDTHH:mm"),
+                  endTime: moment().add(2, "hours").format("YYYY-MM-DDTHH:mm"),
+                  room: "",
+                  price: "",
+                });
+                setOpen(true);
+              }}
+            >
+              Thêm Suất Chiếu
+            </Button>
+          </Box>
+        </Stack>
+
+        {error && (
+          <Typography color="error" sx={{ mb: 2 }}>
+            {error}
+          </Typography>
+        )}
+
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Phim</TableCell>
+                <TableCell>Thời gian bắt đầu</TableCell>
+                <TableCell>Thời gian kết thúc</TableCell>
+                <TableCell>Phòng</TableCell>
+                <TableCell>Giá vé</TableCell>
+                <TableCell>Thao tác</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {showtimes.map((showtime) => (
+                <TableRow key={showtime.id}>
+                  <TableCell>{showtime.movie?.title}</TableCell>
+                  <TableCell>
+                    {moment(showtime.startTime).format("DD/MM/YYYY HH:mm")}
+                  </TableCell>
+                  <TableCell>
+                    {moment(showtime.endTime).format("DD/MM/YYYY HH:mm")}
+                  </TableCell>
+                  <TableCell>{showtime.room}</TableCell>
+                  <TableCell>{formatCurrency(showtime.price)}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => {
+                        setEditShowtime(showtime);
+                        setFormData({
+                          movieId: showtime.movieId,
+                          startTime: moment(showtime.startTime).format(
+                            "YYYY-MM-DDTHH:mm"
+                          ),
+                          endTime: moment(showtime.endTime).format(
+                            "YYYY-MM-DDTHH:mm"
+                          ),
+                          room: showtime.room,
+                          price: showtime.price,
+                        });
+                        setOpen(true);
+                      }}
+                      sx={{ color: "#e50914" }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => handleDelete(showtime.id)}
+                      sx={{ color: "#e50914" }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <Dialog
+          open={open}
+          onClose={() => setOpen(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>
+            {editShowtime ? "Chỉnh Sửa Suất Chiếu" : "Thêm Suất Chiếu Mới"}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              select
+              fullWidth
+              label="Phim"
+              value={formData.movieId}
+              onChange={(e) =>
+                setFormData({ ...formData, movieId: parseInt(e.target.value) })
+              }
+              margin="normal"
+            >
+              {movies.map((movie) => (
+                <MenuItem key={movie.id} value={movie.id}>
+                  {movie.title}
+                </MenuItem>
+              ))}
+            </TextField>
+
+            <TextField
+              fullWidth
+              label="Thời gian bắt đầu"
+              type="datetime-local"
+              value={formData.startTime}
+              onChange={(e) =>
+                setFormData({ ...formData, startTime: e.target.value })
+              }
+              margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+
+            <TextField
+              fullWidth
+              label="Thời gian kết thúc"
+              type="datetime-local"
+              value={formData.endTime}
+              onChange={(e) =>
+                setFormData({ ...formData, endTime: e.target.value })
+              }
+              margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+
+            <TextField
+              fullWidth
+              label="Phòng"
+              value={formData.room}
+              onChange={(e) =>
+                setFormData({ ...formData, room: e.target.value })
+              }
+              margin="normal"
+            />
+
+            <TextField
+              fullWidth
+              label="Giá vé"
+              type="number"
+              value={formData.price}
+              onChange={(e) =>
+                setFormData({ ...formData, price: parseFloat(e.target.value) })
+              }
+              margin="normal"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)}>Hủy</Button>
+            <Button
+              onClick={handleSubmit}
+              variant="contained"
+              sx={{
+                backgroundColor: "#e50914",
+                "&:hover": {
+                  backgroundColor: "#b81d24",
+                },
+              }}
+            >
+              {editShowtime ? "Cập nhật" : "Thêm"}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </Stack>
   );
 };
 

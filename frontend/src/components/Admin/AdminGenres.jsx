@@ -20,6 +20,7 @@ import {
   Alert,
   Tabs,
   Tab,
+  Stack,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -127,123 +128,135 @@ const AdminGenres = () => {
       case 5:
         navigate("/admin/showtimes");
         break;
-      
     }
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      {/* Admin Navigation */}
-      <Paper sx={{ mb: 3 }}>
-        <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
-          textColor="primary"
-          indicatorColor="primary"
-          sx={{
-            "& .MuiTab-root": {
-              color: "#666",
-              "&.Mui-selected": {
-                color: "#e50914",
+    <Stack
+      sx={{
+        background: "linear-gradient(135deg, #2c3e50 0%, #4a6a8a 100%)",
+        height: "100vh",
+      }}
+    >
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        {/* Admin Navigation */}
+        <Paper sx={{ mb: 3 }}>
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            textColor="primary"
+            indicatorColor="primary"
+            sx={{
+              "& .MuiTab-root": {
+                color: "#666",
+                "&.Mui-selected": {
+                  color: "#e50914",
+                },
               },
-            },
-            "& .MuiTabs-indicator": {
-              backgroundColor: "#e50914",
-            },
-          }}
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#e50914",
+              },
+            }}
+          >
+            <Tab label="DASHBOARD" />
+            <Tab label="QUẢN LÝ PHIM" />
+            <Tab label="QUẢN LÝ THỂ LOẠI" />
+            <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
+            <Tab label="QUẢN LÝ ĐẶT VÉ" />
+            <Tab label="QUẢN LÝ SUẤT CHIẾU" />
+          </Tabs>
+        </Paper>
+
+        <Stack
+        sx={{ backgroundColor: "#f5f5f5" }}
         >
-          <Tab label="DASHBOARD" />
-          <Tab label="QUẢN LÝ PHIM" />
-          <Tab label="QUẢN LÝ THỂ LOẠI" />
-          <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
-          <Tab label="QUẢN LÝ ĐẶT VÉ" />
-          <Tab label="QUẢN LÝ SUẤT CHIẾU" />
-        </Tabs>
-      </Paper>
+          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
+            <Typography variant="h4" sx={{ color: "#e50914", fontWeight: "bold" }}>
+              Quản Lý Thể Loại
+            </Typography>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => {
+                setEditGenre(null);
+                setFormData({ name: "" });
+                setOpen(true);
+              }}
+              sx={{
+                backgroundColor: "#e50914",
+                "&:hover": {
+                  backgroundColor: "#b81d24",
+                },
+              }}
+            >
+              Thêm Thể Loại Mới
+            </Button>
+          </Box>
 
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-        <Typography variant="h4">Quản Lý Thể Loại</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => {
-            setEditGenre(null);
-            setFormData({ name: "" });
-            setOpen(true);
-          }}
-          sx={{
-            backgroundColor: "#e50914",
-            "&:hover": {
-              backgroundColor: "#b81d24",
-            },
-          }}
-        >
-          Thêm Thể Loại Mới
-        </Button>
-      </Box>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Tên Thể Loại</TableCell>
+                  <TableCell align="right">Thao Tác</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {genres.map((genre) => (
+                  <TableRow key={genre.id}>
+                    <TableCell>{genre.id}</TableCell>
+                    <TableCell>{genre.name}</TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        onClick={() => {
+                          setEditGenre(genre);
+                          setFormData({ name: genre.name });
+                          setOpen(true);
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton onClick={() => handleDelete(genre.id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Stack>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Tên Thể Loại</TableCell>
-              <TableCell align="right">Thao Tác</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {genres.map((genre) => (
-              <TableRow key={genre.id}>
-                <TableCell>{genre.id}</TableCell>
-                <TableCell>{genre.name}</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    onClick={() => {
-                      setEditGenre(genre);
-                      setFormData({ name: genre.name });
-                      setOpen(true);
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(genre.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>
-          {editGenre ? "Chỉnh Sửa Thể Loại" : "Thêm Thể Loại Mới"}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Tên thể loại"
-            fullWidth
-            value={formData.name}
-            onChange={(e) => setFormData({ name: e.target.value })}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Hủy</Button>
-          <Button onClick={handleSubmit} variant="contained">
-            {editGenre ? "Cập Nhật" : "Thêm"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>
+            {editGenre ? "Chỉnh Sửa Thể Loại" : "Thêm Thể Loại Mới"}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Tên thể loại"
+              fullWidth
+              value={formData.name}
+              onChange={(e) => setFormData({ name: e.target.value })}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)}>Hủy</Button>
+            <Button onClick={handleSubmit} variant="contained">
+              {editGenre ? "Cập Nhật" : "Thêm"}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </Stack>
   );
 };
 

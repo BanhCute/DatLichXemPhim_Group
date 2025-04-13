@@ -7,7 +7,6 @@ import {
   Paper,
   Fade,
   InputAdornment,
-  IconButton,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Person, Email, Lock } from "@mui/icons-material";

@@ -19,6 +19,7 @@ import {
   Button,
   Grid,
   IconButton,
+  Stack,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -248,160 +249,182 @@ const AdminBookings = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Paper sx={{ mb: 3 }}>
-        <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
-          textColor="primary"
-          indicatorColor="primary"
-          sx={{
-            "& .MuiTab-root": {
-              color: "#666",
-              "&.Mui-selected": {
-                color: "#e50914",
+    <Stack
+      sx={{
+        background: "linear-gradient(135deg, #2c3e50 0%, #4a6a8a 100%)",
+        height: "100vh",
+      }}
+    >
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Paper sx={{ mb: 3 }}>
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            textColor="primary"
+            indicatorColor="primary"
+            sx={{
+              "& .MuiTab-root": {
+                color: "#666",
+                "&.Mui-selected": {
+                  color: "#e50914",
+                },
               },
-            },
-            "& .MuiTabs-indicator": {
-              backgroundColor: "#e50914",
-            },
-          }}
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#e50914",
+              },
+            }}
+          >
+            <Tab label="DASHBOARD" />
+            <Tab label="QUẢN LÝ PHIM" />
+            <Tab label="QUẢN LÝ THỂ LOẠI" />
+            <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
+            <Tab label="QUẢN LÝ ĐẶT VÉ" />
+            <Tab label="QUẢN LÝ SUẤT CHIẾU" />
+          </Tabs>
+        </Paper>
+
+        <Stack
+        sx={{
+          backgroundColor: "#f5f5f5" 
+        }}
         >
-          <Tab label="DASHBOARD" />
-          <Tab label="QUẢN LÝ PHIM" />
-          <Tab label="QUẢN LÝ THỂ LOẠI" />
-          <Tab label="QUẢN LÝ NGƯỜI DÙNG" />
-          <Tab label="QUẢN LÝ ĐẶT VÉ" />
-          <Tab label="QUẢN LÝ SUẤT CHIẾU" />
-        </Tabs>
-      </Paper>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mb: 3,
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              variant="h5"
+              sx={{ color: "#e50914", fontWeight: "bold" }}
+            >
+              Quản Lý Đặt Vé
+            </Typography>
+          </Box>
+        </Stack>
 
-      <Typography
-        variant="h5"
-        sx={{ color: "#e50914", fontWeight: "bold", mb: 3 }}
-      >
-        Quản Lý Đặt Vé
-      </Typography>
+        {error && (
+          <Typography color="error" sx={{ mb: 2 }}>
+            {error}
+          </Typography>
+        )}
 
-      {error && (
-        <Typography color="error" sx={{ mb: 2 }}>
-          {error}
-        </Typography>
-      )}
-
-      {loading ? (
-        <Typography>Đang tải...</Typography>
-      ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Người đặt</TableCell>
-                <TableCell>Phim</TableCell>
-                <TableCell>Suất chiếu</TableCell>
-                <TableCell>Ghế</TableCell>
-                <TableCell>Tổng tiền</TableCell>
-                <TableCell>Khuyến mãi</TableCell>
-                <TableCell>Phương thức</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell>Ngày đặt</TableCell>
-                <TableCell>Thao tác</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {bookings.map((booking) => (
-                <TableRow key={booking.id}>
-                  <TableCell>{booking.id}</TableCell>
-                  <TableCell>{booking.userId}</TableCell>
-                  <TableCell>{booking.showTime?.movie?.title}</TableCell>
-                  <TableCell>
-                    {moment(booking.showTime?.startTime).format(
-                      "DD/MM/YYYY HH:mm"
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
-                      {booking.seats.map((seat) => (
+        {loading ? (
+          <Typography>Đang tải...</Typography>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Người đặt</TableCell>
+                  <TableCell>Phim</TableCell>
+                  <TableCell>Suất chiếu</TableCell>
+                  <TableCell>Ghế</TableCell>
+                  <TableCell>Tổng tiền</TableCell>
+                  <TableCell>Khuyến mãi</TableCell>
+                  <TableCell>Phương thức</TableCell>
+                  <TableCell>Trạng thái</TableCell>
+                  <TableCell>Ngày đặt</TableCell>
+                  <TableCell>Thao tác</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {bookings.map((booking) => (
+                  <TableRow key={booking.id}>
+                    <TableCell>{booking.id}</TableCell>
+                    <TableCell>{booking.userId}</TableCell>
+                    <TableCell>{booking.showTime?.movie?.title}</TableCell>
+                    <TableCell>
+                      {moment(booking.showTime?.startTime).format(
+                        "DD/MM/YYYY HH:mm"
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
+                        {booking.seats.map((seat) => (
+                          <Chip
+                            key={seat.id}
+                            label={seat.number}
+                            size="small"
+                            sx={{ backgroundColor: "#e50914", color: "white" }}
+                          />
+                        ))}
+                      </Box>
+                    </TableCell>
+                    <TableCell>{formatCurrency(booking.totalPrice)}</TableCell>
+                    <TableCell>
+                      {booking.promotion ? (
                         <Chip
-                          key={seat.id}
-                          label={seat.number}
+                          label={`-${booking.promotion.discount}%`}
+                          color="success"
                           size="small"
-                          sx={{ backgroundColor: "#e50914", color: "white" }}
                         />
-                      ))}
-                    </Box>
-                  </TableCell>
-                  <TableCell>{formatCurrency(booking.totalPrice)}</TableCell>
-                  <TableCell>
-                    {booking.promotion ? (
+                      ) : (
+                        "Không có"
+                      )}
+                    </TableCell>
+                    <TableCell>
                       <Chip
-                        label={`-${booking.promotion.discount}%`}
-                        color="success"
+                        label={getPaymentMethodLabel(
+                          booking.payments?.[0]?.method
+                        )}
+                        color={
+                          booking.payments?.[0]?.method === "CASH"
+                            ? "success"
+                            : booking.payments?.[0]?.method === "PAYPAL"
+                            ? "primary"
+                            : booking.payments?.[0]?.method === "CREDIT_CARD"
+                            ? "info"
+                            : "default"
+                        }
                         size="small"
                       />
-                    ) : (
-                      "Không có"
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={getPaymentMethodLabel(
-                        booking.payments?.[0]?.method
-                      )}
-                      color={
-                        booking.payments?.[0]?.method === "CASH"
-                          ? "success"
-                          : booking.payments?.[0]?.method === "PAYPAL"
-                          ? "primary"
-                          : booking.payments?.[0]?.method === "CREDIT_CARD"
-                          ? "info"
-                          : "default"
-                      }
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={booking.status}
-                      color={
-                        booking.status === "CONFIRMED" ? "success" : "warning"
-                      }
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {moment(booking.createdAt).format("DD/MM/YYYY HH:mm")}
-                  </TableCell>
-                  <TableCell>
-                    <IconButton
-                      onClick={() => handleOpenDetail(booking.id)}
-                      sx={{
-                        color: "#e50914",
-                        "&:hover": {
-                          backgroundColor: "rgba(229, 9, 20, 0.1)",
-                        },
-                      }}
-                    >
-                      <VisibilityIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={booking.status}
+                        color={
+                          booking.status === "CONFIRMED" ? "success" : "warning"
+                        }
+                        size="small"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {moment(booking.createdAt).format("DD/MM/YYYY HH:mm")}
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        onClick={() => handleOpenDetail(booking.id)}
+                        sx={{
+                          color: "#e50914",
+                          "&:hover": {
+                            backgroundColor: "rgba(229, 9, 20, 0.1)",
+                          },
+                        }}
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
 
-      <BookingDetailDialog
-        booking={selectedBooking}
-        open={openDialog}
-        onClose={() => {
-          setOpenDialog(false);
-          setSelectedBooking(null);
-        }}
-      />
-    </Container>
+        <BookingDetailDialog
+          booking={selectedBooking}
+          open={openDialog}
+          onClose={() => {
+            setOpenDialog(false);
+            setSelectedBooking(null);
+          }}
+        />
+      </Container>
+    </Stack>
   );
 };
 

@@ -21,7 +21,7 @@ const Login = () => {
   });
   const [error, setError] = useState("");
 
-  // Xóa email đã lưu sau khi load
+
   useEffect(() => {
     const registeredEmail = localStorage.getItem("registeredEmail");
     if (registeredEmail) {
@@ -99,17 +99,20 @@ const Login = () => {
   return (
     <Box
       sx={{
+
         minHeight: "100vh",
         background: "linear-gradient(145deg, #0f172a 0%, #1e293b 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         px: 2,
+
         position: "relative",
         overflow: "hidden",
         paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
+
       {/* Hiệu ứng hạt (particle effect) trên nền */}
       <Box
         sx={{
@@ -274,7 +277,9 @@ const Login = () => {
                       },
                     },
                   }}
-                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.4)" } }}
+                  InputLabelProps={{
+                    sx: { color: "rgba(255, 255, 255, 0.4)" },
+                  }}
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": {
@@ -326,7 +331,9 @@ const Login = () => {
                       },
                     },
                   }}
-                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.4)" } }}
+                  InputLabelProps={{
+                    sx: { color: "rgba(255, 255, 255, 0.4)" },
+                  }}
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": {
@@ -425,5 +432,4 @@ const Login = () => {
     </Box>
   );
 };
-
 export default Login;

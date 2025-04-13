@@ -21,6 +21,10 @@ import EventSeatIcon from "@mui/icons-material/EventSeat";
 import PaymentIcon from "@mui/icons-material/Payment";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { motion } from "framer-motion";
+
+// Tạo MotionButton
+const MotionButton = motion(Button);
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
@@ -42,15 +46,51 @@ const Home = () => {
     }
   };
 
+  // Hiệu ứng chuyển động
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+        when: "beforeChildren",
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const childVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  };
+
+  const buttonVariants = {
+    hover: {
+      scale: 1.05,
+      boxShadow: "0 0 20px rgba(229, 9, 20, 0.7)",
+      transition: { duration: 0.3, ease: "easeOut" },
+    },
+    tap: { scale: 0.95 },
+  };
+
   return (
-    <Box sx={{ fontFamily: "'Roboto', sans-serif" }}>
-      {/* Hero Section - Tinh chỉnh với hình ảnh nhỏ hơn và giao diện hiện đại */}
+    <Box
+      sx={{
+        fontFamily: "'Inter', sans-serif",
+        background: "linear-gradient(45deg, #0a0a0a, #1c2526, #0a0a0a)", // Đặt nền tổng thể tối
+        backgroundSize: "200%",
+        animation: "gradientBackground 10s ease infinite",
+        minHeight: "100vh", // Đảm bảo nền bao phủ toàn bộ trang
+      }}
+    >
+      {/* Hero Section */}
       <Box
         sx={{
-          background: "linear-gradient(135deg, #1e3a8a 30%, #3b82f6 90%)",
           color: "white",
-          py: { xs: 8, md: 10 },
-          mb: 6,
+          py: { xs: 10, md: 12 },
+          mb: 8,
           position: "relative",
           overflow: "hidden",
           "&::after": {
@@ -60,347 +100,523 @@ const Home = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            background: "radial-gradient(circle, transparent 20%, #000 70%)",
-            opacity: 0.1,
+            background:
+              "radial-gradient(circle, rgba(255, 255, 255, 0.03), transparent 70%)",
+            opacity: 0.3,
           },
         }}
       >
         <Container maxWidth="lg">
-          <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={7}>
-              <Box sx={{ position: "relative", zIndex: 1 }}>
-                <Typography
-                  variant="h1"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{
-                    fontSize: { xs: "2rem", md: "3rem" },
-                    textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
-                    animation: "fadeInUp 1s ease-out",
-                  }}
+          <motion.div variants={containerVariants} initial="hidden" animate="visible">
+            <Grid container spacing={4} alignItems="center">
+              <Grid item xs={12} md={7}>
+                <Box sx={{ position: "relative", zIndex: 1 }}>
+                  <motion.div variants={childVariants}>
+                    <Typography
+                      variant="h1"
+                      sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        fontWeight: 800,
+                        fontSize: { xs: "2.5rem", md: "4rem" },
+                        color: "transparent",
+                        letterSpacing: 3,
+                        textTransform: "uppercase",
+                        background:
+                          "linear-gradient(45deg, #e50914, #ff6f61, #e50914)",
+                        backgroundSize: "200%",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        animation: "gradientText 3s ease infinite",
+                        textShadow: "0 0 20px rgba(229, 9, 20, 0.7)",
+                      }}
+                    >
+                      Welcome to
+                      <br />
+                      LGTV Cenima
+                    </Typography>
+                  </motion.div>
+                  <motion.div variants={childVariants}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        mt: 2,
+                        mb: 4,
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 500,
+                        opacity: 0.9,
+                        color: "rgba(255, 255, 255, 0.8)",
+                        textShadow: "0 0 10px rgba(255, 255, 255, 0.3)",
+                      }}
+                    >
+                      Khám phá thế giới điện ảnh với những bộ phim mới nhất
+                    </Typography>
+                  </motion.div>
+                  <motion.div variants={childVariants}>
+                    <MotionButton
+                      variant="contained"
+                      size="large"
+                      component={Link}
+                      to="/movies"
+                      sx={{
+                        px: 4,
+                        py: 1.5,
+                        fontSize: "1rem",
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 500,
+                        textTransform: "none",
+                        borderRadius: "25px",
+                        background:
+                          "linear-gradient(45deg, #e50914, #ff6f61, #e50914)",
+                        backgroundSize: "200%",
+                        color: "#fff",
+                        boxShadow: "0 0 20px rgba(229, 9, 20, 0.5)",
+                        animation: "neonGlow 2s ease-in-out infinite",
+                        "&:hover": {
+                          backgroundPosition: "100% 50%",
+                          textShadow: "0 0 15px rgba(229, 9, 20, 0.7)",
+                        },
+                      }}
+                      variants={buttonVariants}
+                      whileHover="hover"
+                      whileTap="tap"
+                    >
+                      Xem Phim Đang Chiếu
+                    </MotionButton>
+                  </motion.div>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={5}>
+                <motion.div
+                  variants={childVariants}
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
                 >
-                  Chào mừng đến với
-                  <br />
-                  Đặt Vé Xem Phim
-                </Typography>
+                  <Box
+                    sx={{
+                      position: "relative",
+                      "&:hover .overlay": {
+                        opacity: 1,
+                      },
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src="/images/anhNen/rapPhim.jpg"
+                      alt="Hero"
+                      sx={{
+                        width: "100%",
+                        maxWidth: "500px",
+                        height: "auto",
+                        borderRadius: 6,
+                        boxShadow: "0 6px 20px rgba(229, 9, 20, 0.3)",
+                        transform: "perspective(800px) rotateY(-10deg)",
+                        transition: "transform 0.5s ease, box-shadow 0.3s ease, scale 0.3s ease",
+                        "&:hover": {
+                          transform: "perspective(800px) rotateY(0deg) scale(1.05)",
+                          boxShadow: "0 10px 30px rgba(229, 9, 20, 0.5)",
+                        },
+                      }}
+                    />
+                    <Box
+                      className="overlay"
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: "linear-gradient(45deg, rgba(229, 9, 20, 0.2), transparent)",
+                        borderRadius: 6,
+                        opacity: 0,
+                        transition: "opacity 0.3s ease",
+                      }}
+                    />
+                  </Box>
+                </motion.div>
+              </Grid>
+            </Grid>
+          </motion.div>
+        </Container>
+      </Box>
+
+      {/* Features Section */}
+      <Container maxWidth="lg" sx={{ mb: 10 }}>
+  <motion.div variants={containerVariants} initial="hidden" animate="visible">
+    <motion.div variants={childVariants}>
+      <Typography
+        variant="h4"
+        component="h2"
+        sx={{
+          textAlign: "center",
+          mb: 8,
+          fontFamily: "'Roboto', sans-serif",
+          fontWeight: 800,
+          color: "transparent",
+          background: "linear-gradient(45deg, #e50914, #ff6f61, #e50914)",
+          backgroundSize: "200%",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          animation: "gradientText 3s ease infinite",
+          textShadow: "0 0 20px rgba(229, 9, 20, 0.5)",
+        }}
+      >
+        Tại sao chọn LGTV Cenima?
+      </Typography>
+    </motion.div>
+
+    <Grid
+      container
+      spacing={2}
+      sx={{
+        display: "flex",
+        flexWrap: "nowrap", // Ép 4 card nằm trên cùng một dòng
+        overflowX: "auto", // Cho phép cuộn ngang trên mobile nếu không vừa
+        scrollbarWidth: "none", // Ẩn thanh cuộn trên Firefox
+        "&::-webkit-scrollbar": {
+          display: "none", // Ẩn thanh cuộn trên Chrome/Safari
+        },
+      }}
+    >
+      {[
+        {
+          icon: <LocalMoviesIcon sx={{ fontSize: 50, color: "#e50914" }} />,
+          title: "Phim Mới Nhất",
+          desc: "Luôn cập nhật các bộ phim hot nhất",
+        },
+        {
+          icon: <TheatersIcon sx={{ fontSize: 50, color: "#e50914" }} />,
+          title: "Đặt Vé Dễ Dàng",
+          desc: "Chỉ vài bước để có vé xem phim",
+        },
+        {
+          icon: <EventSeatIcon sx={{ fontSize: 50, color: "#e50914" }} />,
+          title: "Chọn Ghế Linh Hoạt",
+          desc: "Tự do chọn vị trí ghế yêu thích",
+        },
+        {
+          icon: <PaymentIcon sx={{ fontSize: 50, color: "#e50914" }} />,
+          title: "Thanh Toán An Toàn",
+          desc: "Hỗ trợ nhiều phương thức thanh toán",
+        },
+      ].map((feature, index) => (
+        <Grid item xs={3} key={index}>
+          <motion.div
+            variants={childVariants}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <Paper
+              elevation={0}
+              sx={{
+                p: { xs: 2, sm: 4 },
+                height: "100%",
+                minWidth: "150px", // Đảm bảo card không bị co quá nhỏ
+                maxWidth: "250px", // Giới hạn chiều rộng tối đa để tránh tràn
+                borderRadius: 3,
+                background: "linear-gradient(45deg, rgba(229, 9, 20, 0.1), transparent)",
+                backdropFilter: "blur(20px)",
+                border: "1px solid rgba(229, 9, 20, 0.3)",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  transform: "translateY(-5px)",
+                  background: "linear-gradient(45deg, rgba(229, 9, 20, 0.2), transparent)",
+                  boxShadow: "0 8px 20px rgba(229, 9, 20, 0.5)",
+                },
+              }}
+            >
+              <Stack spacing={2} alignItems="center" textAlign="center">
+                <motion.div
+                  whileHover={{
+                    rotate: 360,
+                    scale: 1.1,
+                    textShadow: "0 0 15px rgba(229, 9, 20, 0.7)",
+                  }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {feature.icon}
+                </motion.div>
                 <Typography
                   variant="h6"
+                  fontFamily="'Roboto', sans-serif"
+                  fontWeight={800}
                   sx={{
-                    mb: 4,
-                    opacity: 0.9,
-                    fontWeight: 300,
-                    animation: "fadeInUp 1s ease-out 0.3s both",
+                    color: "transparent",
+                    background: "linear-gradient(45deg, #e50914, #ff6f61, #e50914)",
+                    backgroundSize: "200%",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    animation: "gradientText 3s ease infinite",
+                    textShadow: "0 0 15px rgba(229, 9, 20, 0.7)",
                   }}
                 >
-                  Khám phá thế giới điện ảnh với những bộ phim mới nhất
+                  {feature.title}
                 </Typography>
-                <Button
-                  variant="contained"
+                <Typography
+                  fontFamily="'Roboto', sans-serif"
+                  fontWeight={500}
+                  color="#fff"
+                  fontSize="0.9rem"
+                  sx={{
+                    textShadow: "0 0 5px rgba(229, 9, 20, 0.3)",
+                  }}
+                >
+                  {feature.desc}
+                </Typography>
+              </Stack>
+            </Paper>
+          </motion.div>
+        </Grid>
+      ))}
+    </Grid>
+  </motion.div>
+</Container>
+
+      {/* Phim Nổi Bật Section */}
+      <Box
+        sx={{
+          py: 10,
+        }}
+      >
+        <Container maxWidth="lg">
+          <motion.div variants={containerVariants} initial="hidden" animate="visible">
+          <motion.div variants={childVariants}>
+  <Typography
+    variant="h4"
+    component="h2"
+    sx={{
+      textAlign: "center",
+      mb: 8,
+      fontFamily: "'Roboto', sans-serif", // Thay Poppins bằng Roboto
+      fontWeight: 800,
+      color: "transparent",
+      background: "linear-gradient(45deg, #e50914, #ff6f61, #e50914)",
+      backgroundSize: "200%",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+      animation: "gradientText 3s ease infinite",
+      textShadow: "0 0 20px rgba(229, 9, 20, 0.5)",
+    }}
+  >
+    Phim Nổi Bật
+  </Typography>
+</motion.div>
+            <Grid container spacing={3}>
+              {loading
+                ? Array.from(new Array(4)).map((_, index) => (
+                    <Grid item xs={12} sm={6} md={3} key={index}>
+                      <Skeleton
+                        variant="rectangular"
+                        height={400}
+                        sx={{ borderRadius: 2 }}
+                      />
+                    </Grid>
+                  ))
+                : movies.slice(0, 4).map((movie) => (
+                    <Grid item xs={12} sm={6} md={3} key={movie.id}>
+                      <motion.div variants={childVariants}>
+                        <Card
+                          sx={{
+                            height: "100%",
+                            borderRadius: 3,
+                            background: "rgba(255, 255, 255, 0.03)",
+                            backdropFilter: "blur(20px)",
+                            border: "1px solid rgba(255, 255, 255, 0.05)",
+                            transition: "all 0.3s",
+                            "&:hover": {
+                              transform: "translateY(-5px)",
+                              boxShadow: "0 8px 20px rgba(229, 9, 20, 0.3)",
+                            },
+                          }}
+                        >
+                          <Box sx={{ position: "relative" }}>
+                            <CardMedia
+                              component="img"
+                              height="320"
+                              image={
+                                movie.imageUrl || "/images/movies/default-movie.jpg"
+                              }
+                              alt={movie.title}
+                              sx={{
+                                objectFit: "cover",
+                                borderTopLeftRadius: 3,
+                                borderTopRightRadius: 3,
+                              }}
+                            />
+                            <Box
+                              sx={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                bgcolor: "rgba(0,0,0,0.5)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                opacity: 0,
+                                transition: "opacity 0.3s",
+                                "&:hover": {
+                                  opacity: 1,
+                                },
+                              }}
+                            >
+                              <motion.div
+                                whileHover={{
+                                  scale: 1.2,
+                                  textShadow: "0 0 15px rgba(229, 9, 20, 0.7)",
+                                }}
+                                whileTap={{ scale: 0.9 }}
+                              >
+                                <IconButton
+                                  component={Link}
+                                  to={`/movies/${movie.id}`}
+                                  sx={{
+                                    color: "white",
+                                    transform: "scale(1.5)",
+                                    "&:hover": {
+                                      color: "#e50914",
+                                    },
+                                  }}
+                                >
+                                  <PlayCircleOutlineIcon fontSize="large" />
+                                </IconButton>
+                              </motion.div>
+                            </Box>
+                          </Box>
+                          <CardContent sx={{ color: "#fff" }}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              noWrap
+                              fontFamily="'Poppins', sans-serif"
+                              fontWeight={800}
+                              sx={{
+                                textShadow: "0 0 10px rgba(229, 9, 20, 0.3)",
+                              }}
+                            >
+                              {movie.title}
+                            </Typography>
+
+                            <Box
+                              sx={{
+                                display: "flex",
+                                gap: 0.5,
+                                flexWrap: "wrap",
+                                mb: 1,
+                              }}
+                            >
+                              {movie.genres?.map((genre) => (
+                                <Chip
+                                  key={genre.id}
+                                  label={genre.name}
+                                  size="small"
+                                  sx={{
+                                    background: "rgba(229, 9, 20, 0.2)",
+                                    color: "#fff",
+                                    fontFamily: "'Inter', sans-serif",
+                                    fontWeight: 500,
+                                    fontSize: "0.75rem",
+                                    height: "24px",
+                                    "&:hover": {
+                                      background: "rgba(229, 9, 20, 0.4)",
+                                    },
+                                  }}
+                                />
+                              ))}
+                            </Box>
+
+                            <Box
+                              sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                            >
+                              <AccessTimeIcon
+                                sx={{
+                                  fontSize: 18,
+                                  mr: 1,
+                                  color: "rgba(255, 255, 255, 0.7)",
+                                }}
+                              />
+                              <Typography
+                                variant="body2"
+                                fontFamily="'Inter', sans-serif"
+                                fontWeight={500}
+                                color="rgba(255, 255, 255, 0.7)"
+                              >
+                                {movie.duration} phút
+                              </Typography>
+                            </Box>
+                            <Chip
+                              label="Đang chiếu"
+                              size="small"
+                              sx={{
+                                mt: 1,
+                                background: "rgba(229, 9, 20, 0.5)",
+                                color: "#fff",
+                                fontFamily: "'Inter', sans-serif",
+                                fontWeight: 500,
+                              }}
+                            />
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    </Grid>
+                  ))}
+            </Grid>
+
+            <motion.div variants={childVariants}>
+              <Box sx={{ textAlign: "center", mt: 8 }}>
+                <MotionButton
+                  variant="outlined"
                   size="large"
                   component={Link}
                   to="/movies"
                   sx={{
                     px: 4,
-                    py: 1.5,
-                    fontSize: "1rem",
-                    textTransform: "none",
+                    py: 1.2,
                     borderRadius: "25px",
-                    background:
-                      "linear-gradient(45deg, #ff6b6b 30%, #ff8e53 90%)",
-                    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
-                    transition: "all 0.3s",
-                    animation: "fadeInUp 1s ease-out 0.6s both",
+                    textTransform: "none",
+                    fontSize: "1rem",
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 500,
+                    borderColor: "#e50914",
+                    color: "#e50914",
                     "&:hover": {
-                      transform: "scale(1.05)",
-                      boxShadow: "0 6px 10px 4px rgba(255, 105, 135, .4)",
+                      background: "rgba(229, 9, 20, 0.2)",
+                      borderColor: "#e50914",
+                      color: "#e50914",
+                      textShadow: "0 0 15px rgba(229, 9, 20, 0.7)",
                     },
                   }}
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
                 >
-                  Xem Phim Đang Chiếu
-                </Button>
+                  Xem tất cả phim
+                </MotionButton>
               </Box>
-            </Grid>
-            <Grid item xs={12} md={5}>
-              <Box
-                component="img"
-                src="/images/movies/popcorn-movie-party-entertainment.webp"
-                alt="Hero"
-                sx={{
-                  width: "100%",
-                  maxWidth: "350px", // Thu nhỏ kích thước hình ảnh
-                  height: "auto",
-                  borderRadius: 6,
-                  boxShadow: "0 6px 12px rgba(0,0,0,0.2)",
-                  transform: "perspective(800px) rotateY(-10deg)",
-                  transition: "transform 0.5s ease",
-                  "&:hover": {
-                    transform: "perspective(800px) rotateY(0deg)",
-                  },
-                  animation: "fadeInRight 1s ease-out",
-                }}
-              />
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-
-      {/* Features Section - Thiết kế gọn gàng và hiện đại hơn */}
-      <Container maxWidth="lg" sx={{ mb: 8 }}>
-        <Grid container spacing={3}>
-          {[
-            {
-              icon: <LocalMoviesIcon sx={{ fontSize: 40, color: "#1e3a8a" }} />,
-              title: "Phim Mới Nhất",
-              desc: "Luôn cập nhật các bộ phim hot nhất",
-            },
-            {
-              icon: <TheatersIcon sx={{ fontSize: 40, color: "#1e3a8a" }} />,
-              title: "Đặt Vé Dễ Dàng",
-              desc: "Chỉ vài bước để có vé xem phim",
-            },
-            {
-              icon: <EventSeatIcon sx={{ fontSize: 40, color: "#1e3a8a" }} />,
-              title: "Chọn Ghế Linh Hoạt",
-              desc: "Tự do chọn vị trí ghế yêu thích",
-            },
-            {
-              icon: <PaymentIcon sx={{ fontSize: 40, color: "#1e3a8a" }} />,
-              title: "Thanh Toán An Toàn",
-              desc: "Hỗ trợ nhiều phương thức thanh toán",
-            },
-          ].map((feature, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <Paper
-                elevation={2}
-                sx={{
-                  p: 3,
-                  height: "100%",
-                  borderRadius: 3,
-                  background:
-                    "linear-gradient(to bottom, #fff 0%, #f9fafb 100%)",
-                  transition: "all 0.3s ease",
-                  animation: `fadeInUp 0.5s ease-out ${index * 0.2}s both`,
-                  "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
-                  },
-                }}
-              >
-                <Stack spacing={2} alignItems="center" textAlign="center">
-                  {feature.icon}
-                  <Typography variant="h6" fontWeight="600" color="#1e3a8a">
-                    {feature.title}
-                  </Typography>
-                  <Typography color="text.secondary" fontSize="0.9rem">
-                    {feature.desc}
-                  </Typography>
-                </Stack>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-
-      {/* Phim Nổi Bật Section - Tinh chỉnh để đẹp hơn */}
-      <Box sx={{ bgcolor: "#f9fafb", py: 8 }}>
-        <Container maxWidth="lg">
-          <Typography
-            variant="h4"
-            component="h2"
-            sx={{
-              textAlign: "center",
-              mb: 6,
-              fontWeight: "600",
-              color: "#1e3a8a",
-            }}
-          >
-            Phim Nổi Bật
-          </Typography>
-
-          <Grid container spacing={3}>
-            {loading
-              ? Array.from(new Array(4)).map((_, index) => (
-                  <Grid item xs={12} sm={6} md={3} key={index}>
-                    <Skeleton
-                      variant="rectangular"
-                      height={350}
-                      sx={{ borderRadius: 2 }}
-                    />
-                  </Grid>
-                ))
-              : movies.slice(0, 4).map((movie) => (
-                  <Grid item xs={12} sm={6} md={3} key={movie.id}>
-                    <Card
-                      sx={{
-                        height: "100%",
-                        borderRadius: 3,
-                        transition: "all 0.3s",
-                        "&:hover": {
-                          transform: "translateY(-5px)",
-                          boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
-                        },
-                      }}
-                    >
-                      <Box sx={{ position: "relative" }}>
-                        <CardMedia
-                          component="img"
-                          height="300" // Giảm chiều cao hình ảnh trong card
-                          image={
-                            movie.imageUrl || "/images/movies/default-movie.jpg"
-                          }
-                          alt={movie.title}
-                          sx={{
-                            objectFit: "cover",
-                            borderTopLeftRadius: 3,
-                            borderTopRightRadius: 3,
-                          }}
-                        />
-                        <Box
-                          sx={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            bgcolor: "rgba(0,0,0,0.4)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            opacity: 0,
-                            transition: "opacity 0.3s",
-                            "&:hover": {
-                              opacity: 1,
-                            },
-                          }}
-                        >
-                          <IconButton
-                            component={Link}
-                            to={`/movies/${movie.id}`}
-                            sx={{
-                              color: "white",
-                              transform: "scale(1.5)",
-                              "&:hover": {
-                                color: "#ff6b6b",
-                              },
-                            }}
-                          >
-                            <PlayCircleOutlineIcon fontSize="large" />
-                          </IconButton>
-                        </Box>
-                      </Box>
-                      <CardContent>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          noWrap
-                          fontWeight="600"
-                        >
-                          {movie.title}
-                        </Typography>
-
-                        {/* Thêm phần hiển thị thể loại */}
-                        <Box
-                          sx={{
-                            display: "flex",
-                            gap: 0.5,
-                            flexWrap: "wrap",
-                            mb: 1,
-                          }}
-                        >
-                          {movie.genres?.map((genre) => (
-                            <Chip
-                              key={genre.id}
-                              label={genre.name}
-                              size="small"
-                              sx={{
-                                backgroundColor: "#e3f2fd",
-                                color: "#1976d2",
-                                fontSize: "0.75rem",
-                                height: "24px",
-                                "&:hover": {
-                                  backgroundColor: "#bbdefb",
-                                },
-                              }}
-                            />
-                          ))}
-                        </Box>
-
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", mb: 1 }}
-                        >
-                          <AccessTimeIcon
-                            sx={{
-                              fontSize: 18,
-                              mr: 1,
-                              color: "text.secondary",
-                            }}
-                          />
-                          <Typography variant="body2" color="text.secondary">
-                            {movie.duration} phút
-                          </Typography>
-                        </Box>
-                        <Chip
-                          label="Đang chiếu"
-                          color="primary"
-                          size="small"
-                          sx={{ mt: 1, bgcolor: "#3b82f6" }}
-                        />
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-          </Grid>
-
-          <Box sx={{ textAlign: "center", mt: 6 }}>
-            <Button
-              variant="outlined"
-              size="large"
-              component={Link}
-              to="/movies"
-              sx={{
-                px: 4,
-                py: 1.2,
-                borderRadius: "25px",
-                textTransform: "none",
-                fontSize: "1rem",
-                borderColor: "#3b82f6",
-                color: "#3b82f6",
-                "&:hover": {
-                  bgcolor: "#3b82f6",
-                  color: "white",
-                  borderColor: "#3b82f6",
-                },
-              }}
-            >
-              Xem tất cả phim
-            </Button>
-          </Box>
+            </motion.div>
+          </motion.div>
         </Container>
       </Box>
 
       {/* CSS Animations */}
       <style>
         {`
-          @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
+          @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
           }
-
-          @keyframes fadeInRight {
-            from {
-              opacity: 0;
-              transform: translateX(50px);
-            }
-            to {
-              opacity: 1;
-              transform: translateX(0);
-            }
+          @keyframes gradientText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          @keyframes neonGlow {
+            0% { box-shadow: 0 0 20px rgba(229, 9, 20, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(229, 9, 20, 0.8); }
+            100% { box-shadow: 0 0 20px rgba(229, 9, 20, 0.5); }
           }
         `}
       </style>

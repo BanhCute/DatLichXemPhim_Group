@@ -66,7 +66,7 @@ const Footer = () => {
               fontSize: "1.1rem",
             }}
           >
-            🎬{" "}
+            {" "}
             <span
               style={{
                 color: "transparent",

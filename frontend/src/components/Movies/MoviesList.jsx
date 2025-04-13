@@ -11,11 +11,17 @@ import {
   IconButton,
   TextField,
   InputAdornment,
+  Fade,
+  useTheme,
+  useMediaQuery,
+  Chip,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import SearchIcon from "@mui/icons-material/Search";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import TheatersIcon from "@mui/icons-material/Theaters"; // Icon cho thể loại
 
 const MoviesList = () => {
   const [movies, setMovies] = useState([]);
@@ -23,6 +29,9 @@ const MoviesList = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [favorites, setFavorites] = useState([]);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     fetchMovies();
@@ -53,181 +62,311 @@ const MoviesList = () => {
   );
 
   return (
-    <Container
-      maxWidth="100vw"
+    <Box
       sx={{
-        background: "linear-gradient(135deg, #2c3e50 0%, #4a6a8a 100%) ",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%)",
+        pt: { xs: 2, md: 4 },
+        pb: 8,
       }}
     >
-      <Box sx={{ py: 4 }}>
-        {/* Header Section */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            justifyContent: "space-between",
-            alignItems: "center",
-            mb: 4,
-          }}
-        >
-          <Typography
-            variant="h3"
-            component="h1"
-            sx={{
-              fontWeight: "bold",
-              color: "#d32f2f", 
-              display: "flex",
-              alignItems: "center",
-              mb: { xs: 2, md: 0 },
-            }}
-          >
-            <LocalMoviesIcon sx={{ fontSize: 40, mr: 2, color: "#d32f2f" }} />
-            Phim Đang Chiếu
-          </Typography>
-
-          {/* Search input giữ màu xám */}
-          <TextField
-            placeholder="Tìm kiếm phim..."
-            variant="outlined"
-            size="small"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{ width: { xs: "100%", md: "300px" }, bgcolor: "white" }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-
-        {/* Snackbar giữ nguyên */}
-
-        {/* Movies Grid */}
-        <Grid container spacing={4}>
-          {loading ? (
-            <Typography variant="h6">Đang tải dữ liệu...</Typography>
-          ) : (
-            filteredMovies.map((movie) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
-                <Card
+      <Container maxWidth="xl">
+        <Fade in timeout={1000}>
+          <Box>
+            {/* Header Section */}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 4,
+                p: 3,
+                borderRadius: "16px",
+                background: "rgba(255, 255, 255, 0.05)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255, 65, 108, 0.2)",
+              }}
+            >
+              <Typography
+                variant="h3"
+                component="h1"
+                sx={{
+                  fontWeight: 800,
+                  color: "#FF416C",
+                  display: "flex",
+                  alignItems: "center",
+                  mb: { xs: 2, md: 0 },
+                  fontSize: { xs: "1.8rem", md: "2.5rem" },
+                }}
+              >
+                <LocalMoviesIcon
                   sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    borderRadius: "16px",
-                    overflow: "hidden",
-                    bgcolor: "#e0e0e0",
-                    transition: "all 0.3s",
-                    "&:hover": {
-                      transform: "translateY(-8px)",
-                      boxShadow: "0 12px 20px rgba(0,0,0,0.2)",
+                    fontSize: { xs: 28, md: 36 },
+                    mr: 2,
+                    color: "#FF416C",
+                  }}
+                />
+                Phim Đang Chiếu
+              </Typography>
+
+              <TextField
+                placeholder="Tìm kiếm phim..."
+                variant="outlined"
+                size="medium"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                sx={{
+                  width: { xs: "100%", md: "300px" },
+                  "& .MuiOutlinedInput-root": {
+                    backgroundColor: "rgba(255, 255, 255, 0.05)",
+                    borderRadius: "12px",
+                    color: "white",
+                    "& fieldset": {
+                      borderColor: "rgba(255, 65, 108, 0.2)",
                     },
+                    "&:hover fieldset": {
+                      borderColor: "rgba(255, 65, 108, 0.4)",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#FF416C",
+                    },
+                  },
+                  "& .MuiInputAdornment-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
+                  },
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
+
+            {/* Movies Grid - 3 phim trên 1 dòng */}
+            <Grid container spacing={{ xs: 2, md: 3 }}>
+              {loading ? (
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: "white",
+                    p: 3,
+                    width: "100%",
+                    textAlign: "center",
                   }}
                 >
-                  <Box sx={{ position: "relative" }}>
-                    <CardMedia
-                      component="img"
-                      height="400"
-                      image={
-                        movie.imageUrl || "/images/movies/default-movie.jpg"
-                      }
-                      alt={movie.title}
-                      sx={{
-                        objectFit: "cover",
-                        transition: "transform 0.3s ease-in-out",
-                        "&:hover": {
-                          transform: "scale(1.05)",
-                        },
-                      }}
-                    />
-
-                    {/* Favorite Icon luôn màu đỏ khi chọn */}
-                    <IconButton
-                      onClick={() => toggleFavorite(movie.id)}
-                      sx={{
-                        position: "absolute",
-                        top: 8,
-                        right: 8,
-                        bgcolor: "rgba(255,255,255,0.9)",
-                        "&:hover": { bgcolor: "rgba(255,255,255,1)" },
-                      }}
-                    >
-                      <FavoriteIcon
+                  ⏳ Đang tải dữ liệu...
+                </Typography>
+              ) : error ? (
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: "#FF416C",
+                    p: 3,
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  ❌ {error}
+                </Typography>
+              ) : filteredMovies.length === 0 ? (
+                <Typography
+                  variant="h5"
+                  sx={{
+                    textAlign: "center",
+                    color: "rgba(255, 255, 255, 0.5)",
+                    mt: 4,
+                    width: "100%",
+                  }}
+                >
+                  😢 Không tìm thấy phim phù hợp
+                </Typography>
+              ) : (
+                filteredMovies.map((movie, index) => (
+                  <Grid item xs={12} sm={6} md={4} lg={4} key={movie.id}>
+                    <Fade in timeout={500 + index * 100}>
+                      <Card
                         sx={{
-                          color: favorites.includes(movie.id)
-                            ? "#d32f2f"
-                            : "grey",
-                        }}
-                      />
-                    </IconButton>
-
-                    {/* Movie Info Overlay */}
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        bgcolor: "rgba(0,0,0,0.7)",
-                        p: 2,
-                      }}
-                    >
-                      <Typography variant="h6" sx={{ color: "white", mb: 1 }}>
-                        {movie.title}
-                      </Typography>
-                      {/* Icons giữ trắng để nổi bật */}
-                    </Box>
-                  </Box>
-
-                  <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{
-                        mb: 2,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                        height: "4.5em",
-                      }}
-                    >
-                      {movie.description}
-                    </Typography>
-
-                    <Box sx={{ mt: "auto" }}>
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        component={Link}
-                        to={`/movies/${movie.id}`}
-                        sx={{
-                          borderRadius: "8px",
-                          textTransform: "none",
-                          fontWeight: "bold",
-                          mt: 2,
-                          bgcolor: "#d32f2f",
+                          height: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          borderRadius: "16px",
+                          overflow: "hidden",
+                          bgcolor: "rgba(255, 255, 255, 0.05)",
+                          backdropFilter: "blur(10px)",
+                          border: "1px solid rgba(255, 65, 108, 0.2)",
+                          transition: "all 0.4s ease",
                           "&:hover": {
-                            bgcolor: "#b71c1c",
+                            transform: "translateY(-8px) scale(1.02)",
+                            boxShadow: "0 15px 30px rgba(255, 65, 108, 0.3)",
                           },
                         }}
                       >
-                        Xem chi tiết
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))
-          )}
-        </Grid>
+                        <Box sx={{ position: "relative" }}>
+                          <CardMedia
+                            component="img"
+                            height="300"
+                            image={
+                              movie.imageUrl ||
+                              "/images/movies/default-movie.jpg"
+                            }
+                            alt={movie.title}
+                            sx={{
+                              objectFit: "cover",
+                              aspectRatio: "16/9",
+                            }}
+                          />
 
-        {/* No results giữ nguyên */}
-      </Box>
-    </Container>
+                          <IconButton
+                            onClick={() => toggleFavorite(movie.id)}
+                            sx={{
+                              position: "absolute",
+                              top: 12,
+                              right: 12,
+                              bgcolor: "rgba(0,0,0,0.6)",
+                              backdropFilter: "blur(5px)",
+                              "&:hover": {
+                                bgcolor: "rgba(0,0,0,0.8)",
+                                transform: "scale(1.1)",
+                              },
+                              transition: "all 0.3s ease",
+                            }}
+                          >
+                            <FavoriteIcon
+                              sx={{
+                                color: favorites.includes(movie.id)
+                                  ? "#FF416C"
+                                  : "rgba(255,255,255,0.7)",
+                                transition: "color 0.3s ease",
+                              }}
+                            />
+                          </IconButton>
+                        </Box>
+
+                        <CardContent
+                          sx={{
+                            flexGrow: 1,
+                            p: { xs: 2, md: 3 },
+                            color: "white",
+                          }}
+                        >
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              color: "white",
+                              fontWeight: "bold",
+                              mb: 1,
+                              fontSize: { xs: "1rem", md: "1.2rem" },
+                            }}
+                          >
+                            {movie.title}
+                          </Typography>
+
+                          <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
+                            <Chip
+                              icon={
+                                <AccessTimeIcon sx={{ color: "#FF416C" }} />
+                              }
+                              label={`${movie.duration} phút`}
+                              sx={{
+                                bgcolor: "rgba(255, 255, 255, 0.1)",
+                                color: "white",
+                                borderRadius: "8px",
+                                fontSize: "0.8rem",
+                              }}
+                            />
+                          </Box>
+
+                          {/* Thêm phần thể loại */}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              flexWrap: "wrap",
+                              mb: 2,
+                            }}
+                          >
+                            {movie.genres && movie.genres.length > 0 ? (
+                              movie.genres.map((genre) => (
+                                <Chip
+                                  key={genre.id}
+                                  icon={
+                                    <TheatersIcon
+                                      sx={{
+                                        color: "#FF416C",
+                                        fontSize: "1rem",
+                                      }}
+                                    />
+                                  }
+                                  label={genre.name}
+                                  sx={{
+                                    bgcolor: "rgba(255, 255, 255, 0.1)",
+                                    color: "white",
+                                    borderRadius: "8px",
+                                    fontSize: "0.8rem",
+                                    "&:hover": {
+                                      bgcolor: "rgba(255, 65, 108, 0.2)",
+                                    },
+                                  }}
+                                />
+                              ))
+                            ) : (
+                              <Chip
+                                icon={
+                                  <TheatersIcon
+                                    sx={{ color: "#FF416C", fontSize: "1rem" }}
+                                  />
+                                }
+                                label="Không xác định"
+                                sx={{
+                                  bgcolor: "rgba(255, 255, 255, 0.1)",
+                                  color: "white",
+                                  borderRadius: "8px",
+                                  fontSize: "0.8rem",
+                                }}
+                              />
+                            )}
+                          </Box>
+
+                          <Button
+                            variant="contained"
+                            fullWidth
+                            component={Link}
+                            to={`/movies/${movie.id}`}
+                            sx={{
+                              mt: "auto",
+                              py: 1,
+                              px: 3,
+                              borderRadius: "12px",
+                              background: "#FF416C",
+                              textTransform: "none",
+                              fontSize: { xs: "0.9rem", md: "1rem" },
+                              fontWeight: "bold",
+                              transition: "all 0.3s ease",
+                              "&:hover": {
+                                background:
+                                  "linear-gradient(45deg, #FF4B2B, #FF416C)",
+                                transform: "translateY(-2px)",
+                                boxShadow: "0 5px 15px rgba(255, 65, 108, 0.6)",
+                              },
+                            }}
+                          >
+                            Xem chi tiết
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </Fade>
+                  </Grid>
+                ))
+              )}
+            </Grid>
+          </Box>
+        </Fade>
+      </Container>
+    </Box>
   );
 };
 

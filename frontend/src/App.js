@@ -8,9 +8,11 @@ import MoviesList from "./components/Movies/MoviesList";
 import MovieDetail from "./components/Movies/MovieDetail";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
+
 import SeatSelection from "./components/Bookings/SeatSelection";
 import BookingConfirmation from "./components/Bookings/BookingConfirmation";
 import Profile from "./components/User/Profile";
+
 import Home from "./components/Home/Home";
 import BookingSuccess from "./components/Bookings/BookingSuccess";
 import BookingHistory from "./components/Bookings/BookingHistory";
@@ -45,6 +47,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+
 
             {/* Admin Routes */}
             <Route
@@ -140,6 +143,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
           </Routes>
         </Box>
         <Footer />

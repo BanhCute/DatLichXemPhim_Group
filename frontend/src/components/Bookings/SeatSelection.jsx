@@ -500,3 +500,4 @@ const SeatSelection = () => {
 };
 
 export default SeatSelection;
+
